@@ -5,6 +5,8 @@
     "dev": "next dev -p 3001",
     "build": "next build",
     "start": "next start",
+    "start:prod": "node dist/src/main.js",
+    "postinstall": "npm run prestart:prod",
     "lint": "next lint"
   },
   "dependencies": {
