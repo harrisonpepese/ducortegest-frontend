@@ -16,13 +16,15 @@ import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import GroupIcon from "@mui/icons-material/Group";
-import EngineeringIcon from '@mui/icons-material/Engineering';
-import ContactPageIcon from '@mui/icons-material/ContactPage';
-import DateRangeIcon from '@mui/icons-material/DateRange';
-import HomeIcon from '@mui/icons-material/Home';
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import EngineeringIcon from "@mui/icons-material/Engineering";
+import ContactPageIcon from "@mui/icons-material/ContactPage";
+import DateRangeIcon from "@mui/icons-material/DateRange";
+import HomeIcon from "@mui/icons-material/Home";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/router";
+import DefaultTheme from "../styles/DefaultTheme";
+import { ThemeProvider } from "@mui/material";
 
 const drawerWidth = 240;
 
@@ -90,21 +92,25 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 const menuList = [
-  { text: "Home", icon: ()=><HomeIcon/>, url: "/" },
-  { text: "Agendamentos", icon: ()=><DateRangeIcon/>, url: "/agendamento" },
-  { text: "Atendimentos", icon: ()=><GroupIcon/>, url: "/atendimento" },
-  { text: "Clientes", icon: ()=><ContactPageIcon/>, url: "/cliente" },
-  { text: "Funcionários", icon: ()=><EngineeringIcon/>, url: "/funcionario" },
-  { text: "Serviços", icon: ()=><MenuIcon/>, url: "/servico" },
+  { text: "Home", icon: () => <HomeIcon />, url: "/" },
+  { text: "Agendamentos", icon: () => <DateRangeIcon />, url: "/agendamento" },
+  { text: "Atendimentos", icon: () => <GroupIcon />, url: "/atendimento" },
+  { text: "Clientes", icon: () => <ContactPageIcon />, url: "/cliente" },
+  {
+    text: "Funcionários",
+    icon: () => <EngineeringIcon />,
+    url: "/funcionario",
+  },
+  { text: "Serviços", icon: () => <MenuIcon />, url: "/servico" },
 ];
 export default function MiniDrawer({ Component, pageProps }) {
   const theme = useTheme();
   const router = useRouter();
   const [open, setOpen] = React.useState(false);
 
-  const gotoUrl = (url)=>{
-    router.push(url)
-  }
+  const gotoUrl = (url) => {
+    router.push(url);
+  };
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -113,56 +119,68 @@ export default function MiniDrawer({ Component, pageProps }) {
   const handleDrawerClose = () => {
     setOpen(false);
   };
+  const isLayoutNeeded = router.pathname == "/login";
+  if (isLayoutNeeded) {
+    return (
+      <ThemeProvider theme={DefaultTheme}>
+        <Component {...pageProps} />;
+      </ThemeProvider>
+    );
+  }
 
   return (
-    <Box sx={{ display: "flex" }}>
-      <CssBaseline />
-      <ToastContainer />
-      <AppBar position="fixed" open={open}>
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            sx={{
-              marginRight: "36px",
-              ...(open && { display: "none" }),
-            }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            Mini variant drawer
-          </Typography>
-        </Toolbar>
-      </AppBar>
-      <Drawer variant="permanent" open={open}>
-        <DrawerHeader>
-          <IconButton onClick={handleDrawerClose}>
-            {theme.direction === "rtl" ? (
-              <ChevronRightIcon />
-            ) : (
-              <ChevronLeftIcon />
-            )}
-          </IconButton>
-        </DrawerHeader>
-        <Divider />
-        <List>
-          {menuList.map((item) => (
-            <ListItem button key={item.text} onClick={()=>gotoUrl(item.url)}>
-              <ListItemIcon>
-                {item.icon()}
-              </ListItemIcon>
-              <ListItemText primary={item.text} />
-            </ListItem>
-          ))}
-        </List>
-      </Drawer>
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-        <DrawerHeader />
-        <Component {...pageProps} />
+    <ThemeProvider theme={DefaultTheme}>
+      <Box sx={{ display: "flex" }}>
+        <CssBaseline />
+        <ToastContainer />
+        <AppBar position="fixed" open={open}>
+          <Toolbar>
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              onClick={handleDrawerOpen}
+              edge="start"
+              sx={{
+                marginRight: "36px",
+                ...(open && { display: "none" }),
+              }}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Typography variant="h6" noWrap component="div">
+              Du Corte Gest
+            </Typography>
+          </Toolbar>
+        </AppBar>
+        <Drawer variant="permanent" open={open}>
+          <DrawerHeader>
+            <IconButton onClick={handleDrawerClose}>
+              {theme.direction === "rtl" ? (
+                <ChevronRightIcon />
+              ) : (
+                <ChevronLeftIcon />
+              )}
+            </IconButton>
+          </DrawerHeader>
+          <Divider />
+          <List>
+            {menuList.map((item) => (
+              <ListItem
+                button
+                key={item.text}
+                onClick={() => gotoUrl(item.url)}
+              >
+                <ListItemIcon>{item.icon()}</ListItemIcon>
+                <ListItemText primary={item.text} />
+              </ListItem>
+            ))}
+          </List>
+        </Drawer>
+        <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+          <DrawerHeader />
+          <Component {...pageProps} />
+        </Box>
       </Box>
-    </Box>
+    </ThemeProvider>
   );
 }

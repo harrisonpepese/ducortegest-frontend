@@ -174,8 +174,9 @@ export default function FuncionarioInput({ data = {} }) {
         </Grid>
         <Grid container padding={2} justifyContent="space-between">
           <Button
-            variant="outlined"
+            variant="contained"
             size="large"
+            color="secondary"
             onClick={() => {
               back();
             }}
