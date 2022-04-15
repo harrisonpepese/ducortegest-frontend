@@ -16,9 +16,6 @@ export default function ListWithSearch({ path, columns }) {
   const [list, setList] = useState([]);
   const [column,setColumns] = useState(columns);
   const [search, setSearch] = useState("");
-  const gotoDetail = (id) => {
-    router.push(`${path}/${id}`);
-  };
   const gotoCreate = (id) => {
     router.push(`${path}/create`);
   };
