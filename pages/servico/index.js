@@ -10,8 +10,8 @@ export default function ServicosPage() {
   };
   const columns = [
     { field: "nome", headerName: "Nome", width: 200 },
-    { field: "sobrenome", headerName: "Sobrenome", width: 200 },
-    { field: "telefone", headerName: "Telefone", width: 140 },
+    { field: "valor", headerName: "Valor", width: 200 },
+    { field: "tempoEstimado", headerName: "Tempo Estimado(min)", width: 140 },
     {
       field: "editar",
       headerName: "Ações",
