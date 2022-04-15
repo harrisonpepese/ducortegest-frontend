@@ -26,7 +26,6 @@ export default function ListWithSearch({ path, columns }) {
     console.log(search);
   }, [search]);
   useEffect(() => {
-    console.log(columns);
     setColumns(columns)
   }, [columns]);
   useEffect(async () => {
