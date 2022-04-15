@@ -14,21 +14,22 @@ import ListWithSearch from "../../Components/Lists/ListWithSearch";
 
 export default function ClientesPage() {
   const router = useRouter();
-  const [search, setSearch] = useState("");
-  const clienteList = [
-    { id: "1", primary: "nome + sobrenome ", secodary: "telefone" },
-    { id: "2", primary: "nome + sobrenome", secodary: "telefone" },
-  ];
-  useEffect(() => {
-    console.log(search);
-  }, [search]);
-
   const gotoDetail = (id) => {
     router.push(`cliente/${id}`);
   };
+  const columns = [
+    { field: "nome", headerName: "Nome", width:200},
+    { field: "sobrenome", headerName: "Sobrenome", width:200},
+    { field: "telefone", headerName: "Telefone", width:140},
+    {
+      field: "editar",
+      headerName: "Ações",
+      renderCell: (params) => <Button onClick={()=>gotoDetail(params.row._id)}>Detalhes</Button>,
+    }
+  ];
   return (
     <BaseLayout title="Clientes">
-      <ListWithSearch path="cliente"></ListWithSearch>
+      <ListWithSearch path="cliente" columns={columns}></ListWithSearch>
     </BaseLayout>
   );
 }

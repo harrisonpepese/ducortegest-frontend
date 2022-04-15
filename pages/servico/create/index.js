@@ -1,22 +1,21 @@
-import { Button, Grid, MenuItem, TextField } from "@mui/material";
+import { Button, Grid, TextField } from "@mui/material";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import BaseLayout from "../../../Components/Layout/BaseLayout";
 import http from "../../../src/axios";
 import { cpf, minLength, required } from "../../../src/rules/InputRules";
 import { toast } from "react-toastify";
-import { Update } from "@mui/icons-material";
-export default function ServicoInput({ data = {} }) {
+export default function ServicoInput({ data }) {
   const router = useRouter();
   const [input, setInput] = useState({
-    nome: { value: data.nome || "", error: false, hint: "" },
-    descricao: { value: data.descricao || "", error: false, hint: "" },
-    valor: { value: data.valor || "", error: false, hint: "" },
-    tempoEstimado: { value: data.tempoEstimado || "", error: false, hint: "" }
+    nome: { value: data?.nome || "", error: false, hint: "" },
+    descricao: { value: data?.descricao || "", error: false, hint: "" },
+    valor: { value: data?.valor || "", error: false, hint: "" },
+    tempoEstimado: { value: data?.tempoEstimado || "", error: false, hint: "" },
   });
 
-  const handler = (field, rules = [], value, length=3) => {
-    const validates = rules.map((func) => func(value,length));
+  const handler = (field, rules = [], value, length = 3) => {
+    const validates = rules.map((func) => func(value, length));
     const error = validates.find((x) => x.error == true);
     let state;
     if (error) {
@@ -29,71 +28,72 @@ export default function ServicoInput({ data = {} }) {
     }
     setInput(state);
   };
-  
+
   const validate = () => {
-    const erros = Object.keys(input).map((key)=>input[key].error);
-    const hasError= erros.some((value)=>value===true)
-    if(hasError){
-      toast.error('Existem campos inválidos')
+    const erros = Object.keys(input).map((key) => input[key].error);
+    const hasError = erros.some((value) => value === true);
+    if (hasError) {
+      toast.error("Existem campos inválidos");
       return false;
     }
     return true;
   };
   useEffect(() => {
     const state = { ...input };
-    Object.keys(data).forEach((key) => {
+    Object.keys(data || {}).forEach((key) => {
       if (key == "_id" || key == "__v") {
         return;
       }
       state[key].value = data[key];
     });
     setInput(state);
-  }, [data]);
-  const submit= ()=>{
-    if(validate()){
-      if(data._id){
+  }, []);
+
+  const submit = () => {
+    if (validate()) {
+      if (data?._id) {
         return update();
       }
       return save();
     }
-  }
-  const update = async ()=>{
+  };
+  const update = async () => {
     await http
-    .post(`servico/${data._id}`, {
-      nome: input.nome.value,
-      descricao: input.descricao.value,
-      valor: input.valor.value,
-      tempoEstimado: input.tempoEstimado.value
-    })
-    .then(() => {
-      toast.success("Serviço cadastrado com sucesso");
-      back();
-    })
-    .catch((e) => {
-      toast.error("Erro ao cadastrar serviço.");
-    });
-  }
+      .post(`servico/${data?._id}`, {
+        nome: input.nome.value,
+        descricao: input.descricao.value,
+        valor: input.valor.value,
+        tempoEstimado: input.tempoEstimado.value,
+      })
+      .then(() => {
+        toast.success("Serviço cadastrado com sucesso");
+        back();
+      })
+      .catch((e) => {
+        toast.error("Erro ao cadastrar serviço.");
+      });
+  };
   const save = async () => {
-      await http
-        .post("servico", {
-          nome: input.nome.value,
-          descricao: input.descricao.value,
-          valor: input.valor.value,
-          tempoEstimado: input.tempoEstimado.value
-        })
-        .then(() => {
-          toast.success("funcionario cadastrado com sucesso");
-          back();
-        })
-        .catch((e) => {
-          toast.error("Erro ao cadastrar funcionario.");
-        });
+    await http
+      .post("servico", {
+        nome: input.nome.value,
+        descricao: input.descricao.value,
+        valor: input.valor.value,
+        tempoEstimado: input.tempoEstimado.value,
+      })
+      .then(() => {
+        toast.success("funcionario cadastrado com sucesso");
+        back();
+      })
+      .catch((e) => {
+        toast.error("Erro ao cadastrar funcionario.");
+      });
   };
   const back = () => {
     router.back();
   };
   return (
-    <BaseLayout title={`${data._id ? "Editar" : "Criar"} serviço`}>
+    <BaseLayout title={`${data?._id ? "Editar" : "Criar"} serviço`}>
       <Grid container xs={9} justifyContent="space-between">
         <Grid xs={12} padding={2}>
           <TextField
@@ -104,7 +104,7 @@ export default function ServicoInput({ data = {} }) {
             value={input.nome.value}
             fullWidth
             onChange={(e) => {
-              handler('nome',[required,minLength],e.target.value);
+              handler("nome", [required, minLength], e.target.value);
             }}
           />
         </Grid>
@@ -117,7 +117,7 @@ export default function ServicoInput({ data = {} }) {
             label="Descrição"
             value={input.descricao.value}
             onChange={(e) => {
-              handler('descricao',[required,minLength],e.target.value);
+              handler("descricao", [required, minLength], e.target.value);
             }}
           />
         </Grid>
@@ -125,32 +125,31 @@ export default function ServicoInput({ data = {} }) {
           <TextField
             required
             fullWidth
-            type='number'
+            type="number"
             error={input.valor.error}
             helperText={input.valor.hint}
             label="valor"
             value={input.valor.value}
             onChange={(e) => {
-              handler('valor',[required],e.target.value);
+              handler("valor", [required], e.target.value);
             }}
-          >
-          </TextField>
+          ></TextField>
         </Grid>
         <Grid xs={6} padding={2}>
           <TextField
             fullWidth
             required
-            type='number'
+            type="number"
             error={input.tempoEstimado.error}
             helperText={input.tempoEstimado.hint}
             label="Tempo Estimado (min)"
             value={input.tempoEstimado.value}
             onChange={(e) => {
-              handler('tempoEstimado',[required],e.target.value);
+              handler("tempoEstimado", [required], e.target.value);
             }}
           ></TextField>
         </Grid>
-       
+
         <Grid container padding={2} justifyContent="space-between">
           <Button
             variant="outlined"

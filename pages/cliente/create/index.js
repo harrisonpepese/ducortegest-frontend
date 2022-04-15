@@ -5,14 +5,14 @@ import BaseLayout from "../../../Components/Layout/BaseLayout";
 import http from "../../../src/axios";
 import { cpf, minLength, required } from "../../../src/rules/InputRules";
 import { toast } from "react-toastify";
-export default function FuncionarioInput({ data = {} }) {
+export default function FuncionarioInput({ data }) {
   const router = useRouter();
   const [input, setInput] = useState({
-    nome: { value: data.nome || "", error: false, hint: "" },
-    sobrenome: { value: data.sobrenome || "", error: false, hint: "" },
-    sexo: { value: data.sexo || "", error: false, hint: "" },
-    telefone: { value: data.telefone || "", error: false, hint: "" },
-    cpf: { value: data.cpf || "", error: false, hint: "" }
+    nome: { value: data?.nome || "", error: false, hint: "" },
+    sobrenome: { value: data?.sobrenome || "", error: false, hint: "" },
+    sexo: { value: data?.sexo || "", error: false, hint: "" },
+    telefone: { value: data?.telefone || "", error: false, hint: "" },
+    cpf: { value: data?.cpf || "", error: false, hint: "" }
   });
   const handler = (field, rules = [], value, length = 3) => {
     const validates = rules.map((func) => func(value, length));
@@ -31,7 +31,7 @@ export default function FuncionarioInput({ data = {} }) {
 
   useEffect(() => {
     const state = { ...input };
-    Object.keys(data).forEach((key) => {
+    Object.keys(data || {}).forEach((key) => {
       if (key == "_id" || key == "__v") {
         return;
       }
@@ -51,7 +51,7 @@ export default function FuncionarioInput({ data = {} }) {
   };
   const submit = async () => {
     if (validate()) {
-      if (data._id) {
+      if (data?._id) {
         return await update();
       }
       return await save();
@@ -64,9 +64,7 @@ export default function FuncionarioInput({ data = {} }) {
         sobrenome: input.sobrenome.value,
         sexo: input.sexo.value,
         telefone: input.telefone.value,
-        cpf: input.cpf.value,
-        cnpj: input.cnpj.value,
-        comisao: input.comissao.value,
+        cpf: input.cpf?.value,
       })
       .then(() => {
         toast.success("Cliente cadastrado com sucesso");
@@ -78,7 +76,7 @@ export default function FuncionarioInput({ data = {} }) {
   };
   const update = async () => {
     await http
-      .put(`cliente/${data._id}`, {
+      .put(`cliente/${data?._id}`, {
         nome: input.nome.value,
         sobrenome: input.sobrenome.value,
         sexo: input.sexo.value,
@@ -98,7 +96,7 @@ export default function FuncionarioInput({ data = {} }) {
     router.back();
   };
   return (
-    <BaseLayout title={`${data._id ? "Editar" : "Criar"} cliente`}>
+    <BaseLayout title={`${data?._id ? "Editar" : "Criar"} cliente`}>
       <Grid container xs={9} justifyContent="space-between">
         <Grid xs={12} padding={2}>
           <TextField

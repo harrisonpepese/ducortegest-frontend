@@ -5,16 +5,16 @@ import BaseLayout from "../../../Components/Layout/BaseLayout";
 import http from "../../../src/axios";
 import { cpf, minLength, required } from "../../../src/rules/InputRules";
 import { toast } from "react-toastify";
-export default function FuncionarioInput({ data = {} }) {
+export default function FuncionarioInput({ data }) {
   const router = useRouter();
   const [input, setInput] = useState({
-    nome: { value: data.nome || "", error: false, hint: "" },
-    sobrenome: { value: data.sobrenome || "", error: false, hint: "" },
-    sexo: { value: data.sexo || "", error: false, hint: "" },
-    telefone: { value: data.telefone || "", error: false, hint: "" },
-    cpf: { value: data.cpf || "", error: false, hint: "" },
-    cnpj: { value: data.cnpj || "", error: false, hint: "" },
-    comisao: { value: data.comisao || "", error: false, hint: "" },
+    nome: { value: data?.nome || "", error: false, hint: "" },
+    sobrenome: { value: data?.sobrenome || "", error: false, hint: "" },
+    sexo: { value: data?.sexo || "", error: false, hint: "" },
+    telefone: { value: data?.telefone || "", error: false, hint: "" },
+    cpf: { value: data?.cpf || "", error: false, hint: "" },
+    cnpj: { value: data?.cnpj || "", error: false, hint: "" },
+    comissao: { value: data?.comissao || "", error: false, hint: "" },
   });
   const handler = (field, rules = [], value, length = 3) => {
     const validates = rules.map((func) => func(value, length));
@@ -33,7 +33,7 @@ export default function FuncionarioInput({ data = {} }) {
 
   useEffect(() => {
     const state = { ...input };
-    Object.keys(data).forEach((key) => {
+    Object.keys(data||{}).forEach((key) => {
       if (key == "_id" || key == "__v") {
         return;
       }
@@ -53,7 +53,7 @@ export default function FuncionarioInput({ data = {} }) {
   };
   const submit = async () => {
     if (validate()) {
-      if (data._id) {
+      if (data?._id) {
         return await update();
       }
       return await save();
@@ -61,14 +61,14 @@ export default function FuncionarioInput({ data = {} }) {
   };
   const save = async () => {
     await http
-      .post(`funcionario${data._id ? `/${data._id}` : ""}`, {
+      .post(`funcionario${data?._id ? `/${data._id}` : ""}`, {
         nome: input.nome.value,
         sobrenome: input.sobrenome.value,
         sexo: input.sexo.value,
         telefone: input.telefone.value,
         cpf: input.cpf.value,
         cnpj: input.cnpj.value,
-        comisao: input.comissao.value,
+        comissao: input.comissao.value,
       })
       .then(() => {
         toast.success("funcionario cadastrado com sucesso");
@@ -80,14 +80,14 @@ export default function FuncionarioInput({ data = {} }) {
   };
   const update = async () => {
     await http
-      .put(`funcionario/${data._id}`, {
+      .put(`funcionario/${data?._id}`, {
         nome: input.nome.value,
         sobrenome: input.sobrenome.value,
         sexo: input.sexo.value,
         telefone: input.telefone.value,
         cpf: input.cpf.value,
         cnpj: input.cnpj.value,
-        comisao: input.comissao.value,
+        comissao: input.comissao.value,
       })
       .then(() => {
         toast.success("funcionario atualizado com sucesso");
@@ -102,7 +102,7 @@ export default function FuncionarioInput({ data = {} }) {
     router.back();
   };
   return (
-    <BaseLayout title={`${data._id ? "Editar" : "Criar"} funcionario`}>
+    <BaseLayout title={`${data?._id ? "Editar" : "Criar"} funcionario`}>
       <Grid container xs={9} justifyContent="space-between">
         <Grid xs={12} padding={2}>
           <TextField
@@ -194,9 +194,9 @@ export default function FuncionarioInput({ data = {} }) {
             fullWidth
             type="number"
             label="Comissao"
-            error={input.comisao.error}
-            helperText={input.comisao.hint}
-            value={input.comisao.value}
+            error={input.comissao.error}
+            helperText={input.comissao.hint}
+            value={input.comissao.value}
             inputProps={{ maxLength: 2 }}
             onChange={(e) => {
               handler("comissao", [required, minLength], e.target.value, 2);

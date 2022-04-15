@@ -11,9 +11,10 @@ import { DataGrid } from "@mui/x-data-grid";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import http from "../../src/axios";
-export default function ListWithSearch({ path }) {
+export default function ListWithSearch({ path, columns }) {
   const router = useRouter();
   const [list, setList] = useState([]);
+  const [column,setColumns] = useState(columns);
   const [search, setSearch] = useState("");
   const gotoDetail = (id) => {
     router.push(`${path}/${id}`);
@@ -24,6 +25,10 @@ export default function ListWithSearch({ path }) {
   useEffect(() => {
     console.log(search);
   }, [search]);
+  useEffect(() => {
+    console.log(columns);
+    setColumns(columns)
+  }, [columns]);
   useEffect(async () => {
     const response = await http.get(`${path}`);
     console.log(response);
@@ -53,21 +58,7 @@ export default function ListWithSearch({ path }) {
       <Grid xs={12}>
         <div style={{ height: 400, width: "100%", marginTop: 20 }}>
           <DataGrid
-            columns={[
-              { field: "nome", headerName: "Nome", width:140},
-              { field: "sobrenome", headerName: "Sobrenome", width:140},
-              { field: "telefone", headerName: "telefone", width:140},
-              {
-                field: "editar",
-                headerName: "Editar",
-                renderCell: (params) => <Button onClick={()=>gotoDetail(params.row._id)}>Editar</Button>,
-              },
-              {
-                headerName: "iniciar",
-                renderCell: (params) => <Button>Atendimento</Button>,
-                minWidth:200
-              },
-            ]}
+            columns={column}
             rows={list.map((x, index) => ({ ...x, id: index }))}
             pageSize={5}
           ></DataGrid>

@@ -1,21 +1,25 @@
-import { Grid } from "@mui/material";
 import BaseLayout from "../../Components/Layout/BaseLayout";
-import CountPaper from "../../Components/Paper/CountPaper";
-
+import ListWithSearch from "../../Components/Lists/ListWithSearch";
+import { useRouter } from "next/router";
+import { Button } from "@mui/material";
 export default function AgendamentoPage() {
+  const router = useRouter();
+  const gotoDetail = (id) => {
+    router.push(`atendimento/${id}`);
+  };
+  const columns = [
+    { field: "cliente", headerName: "Cliente", width:200},
+    { field: "funcionario", headerName: "Funcionário", width:200},
+    { field: "serviços", headerName: "servicos", width:140},
+    {
+      field: "editar",
+      headerName: "Ações",
+      renderCell: (params) => <Button onClick={()=>gotoDetail(params.row._id)}>Detalhes</Button>,
+    }
+  ];
   return (
-    <BaseLayout title="Agendamentos">
-      <Grid container xs={8} justifyContent="center">
-        <Grid padding={2}>
-          <CountPaper title="Atendidos hoje" count={3}></CountPaper>
-        </Grid>
-        <Grid padding={2}>
-        <CountPaper title="Em atendimento" count={3}></CountPaper>
-        </Grid>
-      </Grid>
-      <Grid container xs={8}>
-        aba
-      </Grid>
+    <BaseLayout title="Atendimentos">
+      <ListWithSearch path={'atendimento'} columns={columns}></ListWithSearch>
     </BaseLayout>
   );
 }

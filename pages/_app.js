@@ -3,7 +3,8 @@ import { styled, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import MuiDrawer from "@mui/material/Drawer";
 import MuiAppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
+import { Toolbar} from "@mui/material";
+import LogoutIcon from '@mui/icons-material/Logout';
 import List from "@mui/material/List";
 import CssBaseline from "@mui/material/CssBaseline";
 import Typography from "@mui/material/Typography";
@@ -93,8 +94,7 @@ const Drawer = styled(MuiDrawer, {
 }));
 const menuList = [
   { text: "Home", icon: () => <HomeIcon />, url: "/" },
-  { text: "Agendamentos", icon: () => <DateRangeIcon />, url: "/agendamento" },
-  { text: "Atendimentos", icon: () => <GroupIcon />, url: "/atendimento" },
+  { text: "Atendimentos", icon: () => <DateRangeIcon />, url: "/atendimento" },
   { text: "Clientes", icon: () => <ContactPageIcon />, url: "/cliente" },
   {
     text: "Funcionários",
@@ -150,6 +150,10 @@ export default function MiniDrawer({ Component, pageProps }) {
             <Typography variant="h6" noWrap component="div">
               Du Corte Gest
             </Typography>
+            <Box flexGrow={1}/>
+            <IconButton>
+            <LogoutIcon/>
+            </IconButton>
           </Toolbar>
         </AppBar>
         <Drawer variant="permanent" open={open}>
