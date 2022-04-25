@@ -8,18 +8,20 @@ export default function AgendamentoPage() {
     router.push(`atendimento/${id}`);
   };
   const columns = [
-    { field: "cliente", headerName: "Cliente", width:200},
-    { field: "funcionario", headerName: "Funcionário", width:200},
-    { field: "serviços", headerName: "servicos", width:140},
+    { field: "clienteName", headerName: "Cliente", width: 200 },
+    { field: "funcionarioName", headerName: "Funcionário", width: 200 },
+    { field: "qtnServicos", headerName: "qtd servicos", width: 140 },
     {
       field: "editar",
       headerName: "Ações",
-      renderCell: (params) => <Button onClick={()=>gotoDetail(params.row._id)}>Detalhes</Button>,
-    }
+      renderCell: (params) => (
+        <Button onClick={() => gotoDetail(params.row.id)}>Detalhes</Button>
+      ),
+    },
   ];
   return (
     <BaseLayout title="Atendimentos">
-      <ListWithSearch path={'atendimento'} columns={columns}></ListWithSearch>
+      <ListWithSearch path={"atendimento"} columns={columns}></ListWithSearch>
     </BaseLayout>
   );
 }

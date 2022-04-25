@@ -14,7 +14,7 @@ import http from "../../src/axios";
 export default function ListWithSearch({ path, columns }) {
   const router = useRouter();
   const [list, setList] = useState([]);
-  const [column,setColumns] = useState(columns);
+  const [column, setColumns] = useState(columns);
   const [search, setSearch] = useState("");
   const gotoCreate = (id) => {
     router.push(`${path}/create`);
@@ -23,7 +23,7 @@ export default function ListWithSearch({ path, columns }) {
     console.log(search);
   }, [search]);
   useEffect(() => {
-    setColumns(columns)
+    setColumns(columns);
   }, [columns]);
   useEffect(async () => {
     const response = await http.get(`${path}`);
@@ -53,11 +53,7 @@ export default function ListWithSearch({ path, columns }) {
       </Grid>
       <Grid xs={12}>
         <div style={{ height: 400, width: "100%", marginTop: 20 }}>
-          <DataGrid
-            columns={column}
-            rows={list.map((x, index) => ({ ...x, id: index }))}
-            pageSize={5}
-          ></DataGrid>
+          <DataGrid columns={column} rows={list} pageSize={5}></DataGrid>
         </div>
       </Grid>
     </Grid>

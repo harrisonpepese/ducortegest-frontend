@@ -16,7 +16,7 @@ export default function ServicosPage() {
       field: "editar",
       headerName: "Ações",
       renderCell: (params) => (
-        <Button onClick={() => gotoDetail(params.row._id)}>Detalhes</Button>
+        <Button onClick={() => gotoDetail(params.row.id)}>Detalhes</Button>
       ),
     },
   ];

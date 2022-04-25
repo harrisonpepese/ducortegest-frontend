@@ -12,7 +12,7 @@ export default function FuncionarioInput({ data }) {
     sobrenome: { value: data?.sobrenome || "", error: false, hint: "" },
     sexo: { value: data?.sexo || "", error: false, hint: "" },
     telefone: { value: data?.telefone || "", error: false, hint: "" },
-    cpf: { value: data?.cpf || "", error: false, hint: "" }
+    cpf: { value: data?.cpf || "", error: false, hint: "" },
   });
   const handler = (field, rules = [], value, length = 3) => {
     const validates = rules.map((func) => func(value, length));
@@ -81,7 +81,7 @@ export default function FuncionarioInput({ data }) {
         sobrenome: input.sobrenome.value,
         sexo: input.sexo.value,
         telefone: input.telefone.value,
-        cpf: input.cpf.value
+        cpf: input.cpf.value,
       })
       .then(() => {
         toast.success("Cliente atualizado com sucesso");
@@ -138,9 +138,10 @@ export default function FuncionarioInput({ data }) {
             }}
           >
             <MenuItem value="">Selecione</MenuItem>
-            <MenuItem value="homen">homem</MenuItem>
-            <MenuItem value="mulher">mulher</MenuItem>
-            <MenuItem value="outros">outros</MenuItem>
+            <MenuItem value="male">homem</MenuItem>
+            <MenuItem value="female">mulher</MenuItem>
+            <MenuItem value="trans">transgênero</MenuItem>
+            <MenuItem value="nogender">sem gênero</MenuItem>
           </TextField>
         </Grid>
         <Grid xs={6} padding={2}>
