@@ -18,9 +18,9 @@ export default function ClientesPage() {
     router.push(`cliente/${id}`);
   };
   const columns = [
-    { field: "nome", headerName: "Nome", width: 200 },
-    { field: "sobrenome", headerName: "Sobrenome", width: 200 },
-    { field: "telefone", headerName: "Telefone", width: 140 },
+    { field: "nomeCompleto", headerName: "Nome", flex: 1 },
+    { field: "telefone", headerName: "Telefone", flex: 1 },
+    { field: "cpf", headerName: "cpf", flex: 1 },
     {
       field: "editar",
       headerName: "Ações",

@@ -8,9 +8,9 @@ export default function AgendamentoPage() {
     router.push(`atendimento/${id}`);
   };
   const columns = [
-    { field: "clienteName", headerName: "Cliente", width: 200 },
-    { field: "funcionarioName", headerName: "Funcionário", width: 200 },
-    { field: "qtnServicos", headerName: "qtd servicos", width: 140 },
+    { field: "clienteName", headerName: "Cliente", flex: 1 },
+    { field: "funcionarioName", headerName: "Funcionário", flex: 1 },
+    { field: "qtnServicos", headerName: "qtd servicos", flex: 1 },
     {
       field: "editar",
       headerName: "Ações",

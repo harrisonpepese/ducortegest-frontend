@@ -9,9 +9,9 @@ export default function FuncionarioPage() {
     router.push(`funcionario/${id}`);
   };
   const columns = [
-    { field: "nome", headerName: "Nome", width: 200 },
-    { field: "sobrenome", headerName: "Sobrenome", width: 200 },
-    { field: "telefone", headerName: "Telefone", width: 140 },
+    { field: "nome", headerName: "Nome", flex: 1 },
+    { field: "sobrenome", headerName: "Sobrenome", flex: 1 },
+    { field: "telefone", headerName: "Telefone", flex: 1 },
     {
       field: "editar",
       headerName: "Ações",

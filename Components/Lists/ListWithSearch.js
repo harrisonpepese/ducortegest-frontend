@@ -32,7 +32,7 @@ export default function ListWithSearch({ path, columns }) {
   }, []);
 
   return (
-    <Grid container xs={8} justifyContent="space-between">
+    <Grid container xs={10} justifyContent="space-between">
       <Grid xs={8}>
         <TextField
           label="pesquisar"
@@ -41,7 +41,7 @@ export default function ListWithSearch({ path, columns }) {
           fullWidth
         />
       </Grid>
-      <Grid xs={3}>
+      <Grid>
         <Button
           sx={{ height: 56 }}
           variant="contained"

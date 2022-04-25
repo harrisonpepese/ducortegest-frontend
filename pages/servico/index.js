@@ -9,9 +9,9 @@ export default function ServicosPage() {
     router.push(`servico/${id}`);
   };
   const columns = [
-    { field: "nome", headerName: "Nome", width: 200 },
-    { field: "valor", headerName: "Valor", width: 200 },
-    { field: "tempoEstimado", headerName: "Tempo Estimado(min)", width: 140 },
+    { field: "nome", headerName: "Nome", flex: 1 },
+    { field: "valor", headerName: "Valor", flex: 1 },
+    { field: "tempoEstimado", headerName: "Tempo Estimado(min)", flex: 1 },
     {
       field: "editar",
       headerName: "Ações",
