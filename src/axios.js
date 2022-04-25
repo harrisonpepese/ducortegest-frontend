@@ -1,5 +1,5 @@
 import axios from "axios";
 const http = axios.create({
-  baseURL: process.env.BACKEND_URL || "http://localhost:3000/",
+  baseURL: "https://tcc-barbeiro-backend.herokuapp.com/",
 });
 export default http;
