@@ -3,8 +3,8 @@ import { styled, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import MuiDrawer from "@mui/material/Drawer";
 import MuiAppBar from "@mui/material/AppBar";
-import { Toolbar} from "@mui/material";
-import LogoutIcon from '@mui/icons-material/Logout';
+import { Toolbar } from "@mui/material";
+import LogoutIcon from "@mui/icons-material/Logout";
 import List from "@mui/material/List";
 import CssBaseline from "@mui/material/CssBaseline";
 import Typography from "@mui/material/Typography";
@@ -123,7 +123,9 @@ export default function MiniDrawer({ Component, pageProps }) {
   if (isLayoutNeeded) {
     return (
       <ThemeProvider theme={DefaultTheme}>
-        <Component {...pageProps} />;
+        <CssBaseline />
+        <ToastContainer />
+        <Component {...pageProps} />
       </ThemeProvider>
     );
   }
@@ -150,9 +152,9 @@ export default function MiniDrawer({ Component, pageProps }) {
             <Typography variant="h6" noWrap component="div">
               Du Corte Gest
             </Typography>
-            <Box flexGrow={1}/>
+            <Box flexGrow={1} />
             <IconButton>
-            <LogoutIcon/>
+              <LogoutIcon />
             </IconButton>
           </Toolbar>
         </AppBar>

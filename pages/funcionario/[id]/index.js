@@ -9,9 +9,9 @@ export default function FuncionarioDetail() {
   const router = useRouter();
   const { id } = router.query;
   const [cliente, setCliente] = useState({});
-  const gotoEdit = ()=>{
-      router.push(`${id}/edit`)
-  }
+  const gotoEdit = () => {
+    router.push(`${id}/edit`);
+  };
   useEffect(() => {
     http
       .get(`funcionario/${id}`)
@@ -21,7 +21,22 @@ export default function FuncionarioDetail() {
   return (
     <BaseLayout title="Funcionário">
       <Grid container xs={8} justifyContent="Center">
-        <Button onClick={()=>{gotoEdit()}} variant="contained">Editar funcionário</Button>
+        <Button
+          onClick={() => {
+            gotoEdit();
+          }}
+          variant="contained"
+        >
+          Editar funcionário
+        </Button>
+        <Button
+          onClick={() => {
+            gotoEdit();
+          }}
+          variant="contained"
+        >
+          Resetar senha
+        </Button>
       </Grid>
       <Grid container xs={8} marginTop={3}>
         <Grid xs={12}>

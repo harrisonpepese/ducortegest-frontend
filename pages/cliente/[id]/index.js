@@ -44,32 +44,49 @@ export default function ClienteDetail() {
   };
   return (
     <BaseLayout title="Cliente">
-      <Grid display="flex" xs={8} justifyContent="space-between">
-        <Button variant="contained">Novo atendimento</Button>
-        <Button variant="contained">Novo agendamento</Button>
-        <Button
-          onClick={() => {
-            gotoEdit();
-          }}
-          variant="contained"
-        >
-          Editar cliente
-        </Button>
+      <Grid xs={8} md={12} padding={2}>
+        <Paper sx={{ width: "100%", padding: 1 }} elevation={2}>
+          <Stack
+            direction={"row"}
+            spacing={2}
+            justifyContent="center"
+            alignItems="center"
+          >
+            <Button variant="contained">Novo atendimento</Button>
+            <Button
+              onClick={() => {
+                gotoEdit();
+              }}
+              variant="contained"
+            >
+              Editar cliente
+            </Button>
+          </Stack>
+        </Paper>
       </Grid>
-      <Grid xs={8} padding={2}>
+      <Grid xs={8} md={6} padding={2}>
         <Paper sx={{ width: "100%", padding: 1 }} elevation={2}>
           <Stack spacing={1} justifyContent="center" alignItems="center">
             <Avatar sx={{ width: 112, height: 112 }}>GB</Avatar>
             <Box display="flex">
-              <Typography variant="h4">
-                {cliente.nome} {cliente.sobrenome}
-              </Typography>
+              <Typography variant="h4">{cliente.nomeCompleto}</Typography>
               {renderGenderIcon(cliente.sexo)}
             </Box>
             <Box display="flex">
               <ContactPhoneIcon sx={{ marginRight: 1 }} />
               <Typography>{cliente.telefone}</Typography>
             </Box>
+          </Stack>
+        </Paper>
+      </Grid>
+
+      <Grid xs={8} md={6} padding={2}>
+        <Paper sx={{ width: "100%", padding: 1, height: "100%" }} elevation={2}>
+          <Stack spacing={1} justifyContent="center" alignItems="center">
+            <Typography variant="h4">Informações</Typography>
+            <Typography>Atendimentos Realizados:</Typography>
+            <Typography>Ùltimo atendimento:</Typography>
+            <Typography>proximo atendimento</Typography>
           </Stack>
         </Paper>
       </Grid>
