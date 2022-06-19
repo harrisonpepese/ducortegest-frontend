@@ -119,7 +119,13 @@ export default function MiniDrawer({ Component, pageProps }) {
   const handleDrawerClose = () => {
     setOpen(false);
   };
-  const isLayoutNeeded = router.pathname == "/login";
+  React.useEffect(() => {
+    const hasToken = localStorage.getItem("token");
+    if (!hasToken) {
+      router.push("/login");
+    }
+  }, []);
+  const isLayoutNeeded = ["/login", "/singin"].includes(router.pathname);
   if (isLayoutNeeded) {
     return (
       <ThemeProvider theme={DefaultTheme}>

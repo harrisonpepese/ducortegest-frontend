@@ -5,25 +5,31 @@ import { toast } from "react-toastify";
 import http from "../src/axios";
 
 export default function Login() {
-  const router = useRouter();
   const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
-  const login = async () => {
-    let response = await http
-      .post("auth/login", {
+  const [rePassword, setRePassword] = useState("");
+  const [email, setEmail] = useState("");
+  const router = useRouter();
+  const singIn = async () => {
+    if (password != rePassword) {
+      toast.error("As senhas não são correspondentes");
+    }
+    await http
+      .post("auth/singUp", {
         username,
         password,
+        email,
       })
       .catch((error) => {
         toast.error("Verifique o login e a senha para continuar.");
         console.log(error);
       })
-      .then((res) => res.data);
-    localStorage.setItem("token", response.access_token);
-    http.defaults.headers.common[
-      "Authorization"
-    ] = `Bearer ${response.access_token}`;
-    router.push("/");
+      .then((res) => {
+        toast.success("Usuário criado com sucesso.");
+        router.push("/login");
+      });
+
+    //localStorage.setItem("token", token);
   };
   const redefinirSenha = async () => {};
   const cadastrar = async () => {};
@@ -35,7 +41,7 @@ export default function Login() {
       minHeight="100vh"
     >
       <Stack spacing={2} alignContent="center">
-        <Typography variant="h2">Du Corte Gest</Typography>
+        <Typography variant="h3">cadastrar</Typography>
         <TextField
           value={username}
           onChange={(e) => setUserName(e.target.value)}
@@ -47,13 +53,25 @@ export default function Login() {
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Senha"
         ></TextField>
-        <Typography>Esqueceu sua senha?</Typography>
+        <TextField
+          type="password"
+          value={rePassword}
+          onChange={(e) => setRePassword(e.target.value)}
+          placeholder="Confirmar senha"
+        ></TextField>
+
+        <TextField
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="email"
+        ></TextField>
         <>
-          <Button variant="contained" onClick={() => login()}>
-            entrar
+          <Button variant="contained" onClick={() => singIn()}>
+            Cadastar
           </Button>
           <Button variant="contained" color="secondary">
-            Registrar
+            Voltar
           </Button>
         </>
       </Stack>
