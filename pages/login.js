@@ -26,7 +26,9 @@ export default function Login() {
     router.push("/");
   };
   const redefinirSenha = async () => {};
-  const cadastrar = async () => {};
+  const cadastrar = async () => {
+    router.push("/singin");
+  };
   return (
     <Box
       display="flex"
@@ -52,7 +54,11 @@ export default function Login() {
           <Button variant="contained" onClick={() => login()}>
             entrar
           </Button>
-          <Button variant="contained" color="secondary">
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={() => cadastrar()}
+          >
             Registrar
           </Button>
         </>

@@ -5,17 +5,22 @@ import BaseLayout from "../../../Components/Layout/BaseLayout";
 import http from "../../../src/axios";
 import { minLength, required } from "../../../src/rules/InputRules";
 import { toast } from "react-toastify";
+import dayjs from "dayjs";
 
 export default function AgendamentoInput({ data }) {
   const router = useRouter();
+  const { clienteId } = router.query;
   const [input, setInput] = useState({
-    cliente: { value: data?.cliente, error: false, hint: "" },
-    funcionario: { value: data?.funcionario, error: false, hint: "" },
-    data: { value: data?.data , error: false, hint: "" },
-    hora: { value: data?.hora, error: false, hint: "" },
-    servicos: { value: data?.servicos, error: false, hint: "" },
+    cliente: {
+      value: null,
+      error: false,
+      hint: "",
+    },
+    funcionario: { value: null, error: false, hint: "" },
+    data: { value: dayjs().format("YYYY-MM-DD"), error: false, hint: "" },
+    hora: { value: dayjs().format("HH:mm"), error: false, hint: "" },
+    servicos: { value: [], error: false, hint: "" },
   });
-
   const handler = (field, rules = [], value, length = 3) => {
     const validates = rules.map((func) => func(value, length));
     const error = validates.find((x) => x.error == true);
@@ -45,20 +50,45 @@ export default function AgendamentoInput({ data }) {
     return true;
   };
   useEffect(() => {
-    const state = { ...input };
-    Object.keys(data || {}).forEach((key) => {
-      if (key == "_id" || key == "__v") {
-        return;
-      }
-      state[key].value = data[key];
-    });
+    const state = {
+      cliente: {
+        value: data?.clienteId
+          ? { id: data.clienteId, label: data.clienteName }
+          : null,
+        error: false,
+        hint: "",
+      },
+      funcionario: {
+        value: data?.funcionarioId
+          ? { id: data.funcionarioId, label: data.funcionarioName }
+          : null,
+        error: false,
+        hint: "",
+      },
+      data: {
+        value: dayjs(data?.data).format("YYYY-MM-DD"),
+        error: false,
+        hint: "",
+      },
+      hora: {
+        value: dayjs(data?.data).format("HH:mm"),
+        error: false,
+        hint: "",
+      },
+      servicos: {
+        value: data?.servicos
+          ? data?.servicos.map((x) => ({ id: x.id, label: x.nome }))
+          : [],
+        error: false,
+        hint: "",
+      },
+    };
     setInput(state);
   }, [data]);
 
   useEffect(() => {
     http.get("servico").then((res) => {
-      console.log(res.data.map((x) => ({ id: x._id, label: x.nome })))
-      setServicos(res.data.map((x) => ({ id: x._id, label: x.nome })));
+      setServicos(res.data.map((x) => ({ id: x.id, label: x.nome })));
     });
   }, []);
 
@@ -66,34 +96,41 @@ export default function AgendamentoInput({ data }) {
     http
       .get("funcionario")
       .then((res) =>
-        setFuncionarios(res.data.map((x) => ({ id: x._id, label: x.nome })))
+        setFuncionarios(res.data.map((x) => ({ id: x.id, label: x.nome })))
       );
   }, []);
 
   useEffect(() => {
-    http
-      .get("cliente")
-      .then((res) =>
-        setClientes(res.data.map((x) => ({ id: x._id, label: x.nome })))
-      );
-  }, []);
+    http.get("cliente").then((res) => {
+      const data = res.data.map((x) => ({ id: x.id, label: x.nomeCompleto }));
+      setClientes(data);
+      if (clienteId) {
+        handler(
+          "cliente",
+          [required],
+          data.find((x) => x.id == clienteId)
+        );
+      }
+    });
+  }, [clienteId]);
 
   const submit = () => {
     if (validate()) {
-      if (data?._id) {
+      if (data?.id) {
         return update();
       }
       return save();
     }
   };
+
   const update = async () => {
+    console.log(input.data.value);
     await http
-      .post(`atendimento/${data?._id}`, {
-        cliente: input.cliente.value?.id,
-        funcionario: input.funcionario.value?.id,
-        data:input.data.value,
-        hora: input.hora.value,
-        servicos: input.servicos.value,
+      .put(`atendimento/${data?.id}`, {
+        clienteId: input.cliente.value?.id,
+        funcionarioId: input.funcionario.value?.id,
+        data: dayjs(input.data.value + "T" + input.hora.value).toISOString(),
+        servicos: input.servicos.value.map((x) => x.id),
       })
       .then(() => {
         toast.success("Serviço cadastrado com sucesso");
@@ -106,11 +143,10 @@ export default function AgendamentoInput({ data }) {
   const save = async () => {
     await http
       .post("atendimento", {
-        cliente: input.cliente.value?.id,
-        funcionario: input.funcionario.value?.id,
-        data:input.data.value,
-        hora: input.hora.value,
-        servicos: input.servicos.value,
+        clienteId: input.cliente.value?.id,
+        funcionarioId: input.funcionario.value?.id,
+        data: dayjs(input.data.value + "T" + input.hora.value).toISOString(),
+        servicos: input.servicos.value.map((x) => x.id),
       })
       .then(() => {
         toast.success("Agendamento cadastrado com sucesso");
@@ -179,8 +215,7 @@ export default function AgendamentoInput({ data }) {
             onChange={(e) => {
               handler("data", [required], e.target.value);
             }}
-          >
-          </TextField>
+          ></TextField>
         </Grid>
         <Grid xs={12} padding={2}>
           <TextField
@@ -194,8 +229,7 @@ export default function AgendamentoInput({ data }) {
             onChange={(e) => {
               handler("hora", [required], e.target.value);
             }}
-          >
-          </TextField>
+          ></TextField>
         </Grid>
         <Grid xs={12} padding={2}>
           <Autocomplete

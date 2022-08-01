@@ -112,6 +112,11 @@ export default function MiniDrawer({ Component, pageProps }) {
     router.push(url);
   };
 
+  const logout = () => {
+    localStorage.removeItem("token");
+    gotoUrl("login");
+  };
+
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -159,7 +164,7 @@ export default function MiniDrawer({ Component, pageProps }) {
               Du Corte Gest
             </Typography>
             <Box flexGrow={1} />
-            <IconButton>
+            <IconButton onClick={() => logout()}>
               <LogoutIcon />
             </IconButton>
           </Toolbar>

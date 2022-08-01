@@ -26,9 +26,13 @@ export default function ListWithSearch({ path, columns }) {
     setColumns(columns);
   }, [columns]);
   useEffect(async () => {
-    const response = await http.get(`${path}`);
-    console.log(response);
-    setList(response.data);
+    await http
+      .get(`${path}`)
+      .then((res) => {
+        console.log(res);
+        setList(res.data);
+      })
+      .catch((error) => console.log(error));
   }, []);
 
   return (

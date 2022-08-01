@@ -35,7 +35,7 @@ export default function FuncionarioInput({ data }) {
       if (key == "_id" || key == "__v") {
         return;
       }
-      state[key].value = data[key];
+      state[key]?.value = data[key];
     });
     setInput(state);
   }, [data]);

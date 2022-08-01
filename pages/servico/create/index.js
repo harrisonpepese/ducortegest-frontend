@@ -82,11 +82,11 @@ export default function ServicoInput({ data }) {
         tempoEstimado: input.tempoEstimado.value,
       })
       .then(() => {
-        toast.success("funcionario cadastrado com sucesso");
+        toast.success("Serviço cadastrado com sucesso");
         back();
       })
       .catch((e) => {
-        toast.error("Erro ao cadastrar funcionario.");
+        toast.error("Erro ao cadastrar serviço.");
       });
   };
   const back = () => {

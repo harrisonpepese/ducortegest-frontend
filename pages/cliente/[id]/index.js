@@ -16,6 +16,8 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import BaseLayout from "../../../Components/Layout/BaseLayout";
 import http from "../../../src/axios";
+import ClienteInfoPaper from "../../../Components/Paper/ClienteInfoPaper";
+import ButtonPaper from "../../../Components/Paper/ButtonPaper";
 
 export default function ClienteDetail() {
   const router = useRouter();
@@ -24,60 +26,39 @@ export default function ClienteDetail() {
   const gotoEdit = () => {
     router.push(`${id}/edit`);
   };
+  const gotoAtendimento = () => {
+    router.push(`/atendimento/create?clienteId=${id}`);
+  };
   useEffect(() => {
     http
       .get(`cliente/${id}`)
       .then((res) => setCliente(res.data))
       .catch((e) => toast.error(`não foi possivel`));
   }, [id]);
-  const renderGenderIcon = (gender) => {
-    switch (gender) {
-      case "male":
-        return <MaleIcon />;
-      case "female":
-        return <FemaleIcon />;
-      case "trans":
-        return <TransgenderIcon />;
-      default:
-        return <></>;
-    }
-  };
   return (
     <BaseLayout title="Cliente">
       <Grid xs={8} md={12} padding={2}>
-        <Paper sx={{ width: "100%", padding: 1 }} elevation={2}>
-          <Stack
-            direction={"row"}
-            spacing={2}
-            justifyContent="center"
-            alignItems="center"
+        <ButtonPaper>
+          <Button
+            variant="contained"
+            onClick={() => {
+              gotoAtendimento();
+            }}
           >
-            <Button variant="contained">Novo atendimento</Button>
-            <Button
-              onClick={() => {
-                gotoEdit();
-              }}
-              variant="contained"
-            >
-              Editar cliente
-            </Button>
-          </Stack>
-        </Paper>
+            Novo atendimento
+          </Button>
+          <Button
+            onClick={() => {
+              gotoEdit();
+            }}
+            variant="contained"
+          >
+            Editar cliente
+          </Button>
+        </ButtonPaper>
       </Grid>
       <Grid xs={8} md={6} padding={2}>
-        <Paper sx={{ width: "100%", padding: 1 }} elevation={2}>
-          <Stack spacing={1} justifyContent="center" alignItems="center">
-            <Avatar sx={{ width: 112, height: 112 }}>GB</Avatar>
-            <Box display="flex">
-              <Typography variant="h4">{cliente.nomeCompleto}</Typography>
-              {renderGenderIcon(cliente.sexo)}
-            </Box>
-            <Box display="flex">
-              <ContactPhoneIcon sx={{ marginRight: 1 }} />
-              <Typography>{cliente.telefone}</Typography>
-            </Box>
-          </Stack>
-        </Paper>
+        <ClienteInfoPaper {...cliente} />
       </Grid>
 
       <Grid xs={8} md={6} padding={2}>
