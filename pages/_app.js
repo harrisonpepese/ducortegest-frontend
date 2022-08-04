@@ -129,7 +129,7 @@ export default function MiniDrawer({ Component, pageProps }) {
     if (!hasToken) {
       router.push("/login");
     }
-  });
+  }, []);
   const isLayoutNeeded = ["/login", "/singin"].includes(router.pathname);
   if (isLayoutNeeded) {
     return (

@@ -33,8 +33,10 @@ export default function ListWithSearch({ path, columns }) {
         console.log(res);
         setList(res.data);
       })
-      .catch((error) => console.log(error));
-  });
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
 
   return (
     <Grid container xs={10} justifyContent="space-between">

@@ -47,7 +47,7 @@ export default function ServicoInput({ data }) {
       state[key].value = data[key];
     });
     setInput(state);
-  }, [data, input]);
+  }, [data]);
 
   const submit = () => {
     if (validate()) {
@@ -164,7 +164,7 @@ export default function ServicoInput({ data }) {
             variant="contained"
             size="large"
             onClick={() => {
-              save();
+              submit();
             }}
           >
             Salvar
