@@ -47,7 +47,7 @@ export default function ServicoInput({ data }) {
       state[key].value = data[key];
     });
     setInput(state);
-  }, [data]);
+  }, [data, input]);
 
   const submit = () => {
     if (validate()) {

@@ -25,15 +25,16 @@ export default function ListWithSearch({ path, columns }) {
   useEffect(() => {
     setColumns(columns);
   }, [columns]);
-  useEffect(async () => {
-    await http
+
+  useEffect(() => {
+    http
       .get(`${path}`)
       .then((res) => {
         console.log(res);
         setList(res.data);
       })
       .catch((error) => console.log(error));
-  }, []);
+  });
 
   return (
     <Grid container xs={10} justifyContent="space-between">
