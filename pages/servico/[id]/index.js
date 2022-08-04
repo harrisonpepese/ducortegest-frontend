@@ -14,12 +14,14 @@ export default function FuncionarioDetail() {
   const gotoEdit = () => {
     router.push(`${id}/edit`);
   };
+
   useEffect(() => {
     http
       .get(`servico/${id}`)
       .then((res) => setServico(res.data))
       .catch((e) => toast.error(`não foi possivel`));
-  }, []);
+  });
+
   return (
     <BaseLayout title="Serviço">
       <Grid xs={8} md={12} padding={2}>

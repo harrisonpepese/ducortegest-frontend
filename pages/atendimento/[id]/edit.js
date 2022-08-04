@@ -7,8 +7,8 @@ export default function AtendimentoEdit() {
   const router = useRouter();
   const { id } = router.query;
   const [data, setData] = useState({});
-  useEffect(async () => {
-    await http.get(`atendimento/${id}`).then((res) => {
+  useEffect(() => {
+    http.get(`atendimento/${id}`).then((res) => {
       setData(res.data);
     });
   }, [id]);
