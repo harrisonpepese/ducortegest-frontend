@@ -15,7 +15,7 @@ import TransgenderIcon from "@mui/icons-material/Transgender";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import BaseLayout from "../../../Components/Layout/BaseLayout";
-import http from "../../../src/axios";
+import http from "../../../axios/axios";
 import ClienteInfoPaper from "../../../Components/Paper/ClienteInfoPaper";
 import ButtonPaper from "../../../Components/Paper/ButtonPaper";
 

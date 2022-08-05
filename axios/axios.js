@@ -1,5 +1,5 @@
 import axios from "axios";
-const url = process.env.BACKEND_URL || "http://localhost:3000/";
+const url = process.env.BACKEND_URL;
 const http = axios.create({
   baseURL: url,
 });

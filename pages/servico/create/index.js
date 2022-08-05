@@ -2,7 +2,7 @@ import { Button, Grid, TextField } from "@mui/material";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import BaseLayout from "../../../Components/Layout/BaseLayout";
-import http from "../../../src/axios";
+import http from "../../../axios/axios";
 import { cpf, minLength, required } from "../../../src/rules/InputRules";
 import { toast } from "react-toastify";
 export default function ServicoInput({ data }) {

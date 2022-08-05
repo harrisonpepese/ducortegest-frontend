@@ -11,7 +11,7 @@ import { width } from "@mui/system";
 import { DataGrid } from "@mui/x-data-grid";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import http from "../../src/axios";
+import http from "../../axios/axios";
 export default function ListWithSearch({ path, columns }) {
   const router = useRouter();
   const [list, setList] = useState([]);
