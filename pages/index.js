@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import BaseLayout from "../Components/Layout/BaseLayout";
 import CountPaper from "../Components/Paper/CountPaper";
-import http from "../src/axios";
+import http from "../axios/axios";
 
 export default function Home() {
   const router = useRouter();

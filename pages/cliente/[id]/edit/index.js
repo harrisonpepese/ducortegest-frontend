@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import http from "../../../../src/axios";
+import http from "../../../../axios/axios";
 import ClienteInput from "../../create";
 
 export default function ClienteEdit() {

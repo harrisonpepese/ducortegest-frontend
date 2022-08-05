@@ -2,7 +2,7 @@ import { Box, Button, Stack, TextField, Typography } from "@mui/material";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { toast } from "react-toastify";
-import http from "../src/axios";
+import http from "../axios/axios";
 
 export default function Login() {
   const router = useRouter();

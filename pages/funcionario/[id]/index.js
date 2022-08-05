@@ -6,7 +6,7 @@ import BaseLayout from "../../../Components/Layout/BaseLayout";
 import { BasePaper } from "../../../Components/Paper/BasePaper";
 import ButtonPaper from "../../../Components/Paper/ButtonPaper";
 import ClienteInfoPaper from "../../../Components/Paper/ClienteInfoPaper";
-import http from "../../../src/axios";
+import http from "../../../axios/axios";
 
 export default function FuncionarioDetail() {
   const router = useRouter();

@@ -2,7 +2,7 @@ import { Button, Grid, List, ListItem, Stack, Typography } from "@mui/material";
 import BaseLayout from "../../../Components/Layout/BaseLayout";
 import { BasePaper } from "../../../Components/Paper/BasePaper";
 import ButtonPaper from "../../../Components/Paper/ButtonPaper";
-import http from "../../../src/axios";
+import http from "../../../axios/axios";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
