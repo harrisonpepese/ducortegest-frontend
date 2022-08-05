@@ -44,7 +44,9 @@ export default function ServicoInput({ data }) {
       if (key == "_id" || key == "__v") {
         return;
       }
-      state[key].value = data[key];
+      if (state[key]) {
+        state[key].value = data[key];
+      }
     });
     setInput(state);
   }, [data]);

@@ -1,3 +1,4 @@
+import { Iron } from "@mui/icons-material";
 import {
   Grid,
   List,
@@ -31,7 +32,9 @@ export default function ListWithSearch({ path, columns }) {
       .get(`${path}`)
       .then((res) => {
         console.log(res);
-        setList(res.data);
+        if (res && Array.isArray(res.data)) {
+          setList(res.data);
+        }
       })
       .catch((error) => {
         console.log(error);

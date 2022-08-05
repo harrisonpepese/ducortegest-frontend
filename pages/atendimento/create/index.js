@@ -143,8 +143,8 @@ export default function AgendamentoInput({ data }) {
   const save = async () => {
     await http
       .post("atendimento", {
-        clienteId: input.cliente.value?.id,
-        funcionarioId: input.funcionario.value?.id,
+        cliente: input.cliente.value?.id,
+        funcionario: input.funcionario.value?.id,
         data: dayjs(input.data.value + "T" + input.hora.value).toISOString(),
         servicos: input.servicos.value.map((x) => x.id),
       })

@@ -1,6 +1,6 @@
 import axios from "axios";
-const url = "https://tcc-barbeiro-backend.herokuapp.com/";
-//const url = "http://localhost:3000/";
+//const url = "https://tcc-barbeiro-backend.herokuapp.com/";
+const url = "http://localhost:3000/";
 const http = axios.create({
   baseURL: url,
 });
@@ -14,7 +14,7 @@ http.interceptors.response.use(
         window.location.protocol + "//" + window.location.host + "/login";
       localStorage.removeItem("token");
     }
-    return error;
+    throw error;
   }
 );
 export default http;

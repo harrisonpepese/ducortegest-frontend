@@ -33,11 +33,13 @@ export default function FuncionarioInput({ data }) {
 
   useEffect(() => {
     const state = { ...input };
-    Object.keys(data||{}).forEach((key) => {
+    Object.keys(data || {}).forEach((key) => {
       if (key == "_id" || key == "__v") {
         return;
       }
-      state[key].value = data[key];
+      if (state[key]) {
+        state[key].value = data[key];
+      }
     });
     setInput(state);
   }, [data]);
