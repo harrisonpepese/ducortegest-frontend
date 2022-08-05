@@ -96,7 +96,9 @@ export default function AgendamentoInput({ data }) {
     http
       .get("funcionario")
       .then((res) =>
-        setFuncionarios(res.data.map((x) => ({ id: x.id, label: x.nome })))
+        setFuncionarios(
+          res.data.map((x) => ({ id: x.id, label: x.nomeCompleto }))
+        )
       );
   }, []);
 

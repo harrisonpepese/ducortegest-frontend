@@ -146,9 +146,10 @@ export default function FuncionarioInput({ data }) {
             }}
           >
             <MenuItem value="">Selecione</MenuItem>
-            <MenuItem value="homen">homem</MenuItem>
-            <MenuItem value="mulher">mulher</MenuItem>
-            <MenuItem value="outros">outros</MenuItem>
+            <MenuItem value="male">Masculino</MenuItem>
+            <MenuItem value="female">Feminino</MenuItem>
+            <MenuItem value="trans">Trans</MenuItem>
+            <MenuItem value="nogender">Não binário</MenuItem>
           </TextField>
         </Grid>
         <Grid xs={6} padding={2}>
