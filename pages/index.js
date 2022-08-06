@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import BaseLayout from "../Components/Layout/BaseLayout";
 import CountPaper from "../Components/Paper/CountPaper";
 import http from "../axios/axios";
+import ButtonPaper from "../Components/Paper/ButtonPaper";
 
 export default function Home() {
   const router = useRouter();
@@ -28,8 +29,8 @@ export default function Home() {
   }, 10000);
   return (
     <BaseLayout title={"Dashboard"}>
-      <Grid xs={8} container justifyContent="space-between">
-        <Grid>
+      <Grid xs={12} padding={2}>
+        <ButtonPaper>
           <Button
             variant="contained"
             onClick={() => {
@@ -38,8 +39,6 @@ export default function Home() {
           >
             Novo Cliente
           </Button>
-        </Grid>
-        <Grid>
           <Button
             variant="contained"
             onClick={() => {
@@ -48,8 +47,7 @@ export default function Home() {
           >
             Novo Atendimento
           </Button>
-        </Grid>
-        <Grid>
+
           <Button
             variant="contained"
             onClick={() => {
@@ -58,12 +56,12 @@ export default function Home() {
           >
             Novo Serviço
           </Button>
-        </Grid>
+        </ButtonPaper>
       </Grid>
-      <Grid container xs={10} spacing={4} margin={2}>
+      <Grid container>
         {data.map((x, i) => {
           return (
-            <Grid item key={i}>
+            <Grid item key={i} xs={12} sm={6} md={3} padding={2}>
               <CountPaper title={x.name} count={x.value}></CountPaper>
             </Grid>
           );

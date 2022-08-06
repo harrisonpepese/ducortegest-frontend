@@ -1,5 +1,5 @@
 import axios from "axios";
-const url = process.env.BACKEND_URL;
+const url = "https://tcc-barbeiro-backend.herokuapp.com/";
 const http = axios.create({
   baseURL: url,
 });

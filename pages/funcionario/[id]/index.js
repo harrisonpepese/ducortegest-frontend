@@ -1,4 +1,4 @@
-import { Button, Grid, Typography, Paper } from "@mui/material";
+import { Button, Grid, Typography, Stack } from "@mui/material";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -12,6 +12,7 @@ export default function FuncionarioDetail() {
   const router = useRouter();
   const { id } = router.query;
   const [funcionario, setFuncionario] = useState({});
+  const [funcionarioStatus, setFuncionarioStatus] = useState({});
   const gotoEdit = () => {
     router.push(`${id}/edit`);
   };
@@ -20,10 +21,16 @@ export default function FuncionarioDetail() {
       .get(`funcionario/${id}`)
       .then((res) => setFuncionario(res.data))
       .catch((e) => toast.error(`não foi possivel`));
-  }, []);
+  }, [id]);
+  useEffect(() => {
+    http
+      .get(`relatorio/funcionario/${id}`)
+      .then((res) => setFuncionarioStatus(res.data))
+      .catch((e) => toast.error(`não foi possivel`));
+  }, [id]);
   return (
     <BaseLayout title="Funcionário">
-      <Grid xs={8} md={12} padding={2}>
+      <Grid xs={12} padding={2}>
         <ButtonPaper>
           <Button
             onClick={() => {
@@ -43,11 +50,24 @@ export default function FuncionarioDetail() {
           </Button>
         </ButtonPaper>
       </Grid>
-      <Grid xs={8} md={6} padding={2}>
+      <Grid xs={12} md={6} padding={2}>
         <ClienteInfoPaper {...funcionario} />
       </Grid>
-      <Grid xs={8} md={6} padding={2}>
-        <BasePaper></BasePaper>
+      <Grid xs={12} md={6} padding={2}>
+        <BasePaper>
+          <Stack spacing={1} justifyContent="center" alignItems="center">
+            <Typography variant="h4">Informações hoje</Typography>
+            <Typography>
+              Atendimentos realizados: {funcionarioStatus.atendimentos}
+            </Typography>
+            <Typography>
+              Ùltimo atendimento: {funcionarioStatus.ultimoAtendimento}
+            </Typography>
+            <Typography>
+              Total de serviços: {funcionarioStatus.totalServicos}
+            </Typography>
+          </Stack>
+        </BasePaper>
       </Grid>
     </BaseLayout>
   );

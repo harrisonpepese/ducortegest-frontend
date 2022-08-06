@@ -42,8 +42,8 @@ export default function ListWithSearch({ path, columns }) {
   }, []);
 
   return (
-    <Grid container xs={10} justifyContent="space-between">
-      <Grid xs={8}>
+    <>
+      <Grid xs={12} md={8} padding={2}>
         <TextField
           label="pesquisar"
           value={search}
@@ -51,8 +51,9 @@ export default function ListWithSearch({ path, columns }) {
           fullWidth
         />
       </Grid>
-      <Grid>
+      <Grid xs={12} md={4} padding={2}>
         <Button
+          fullWidth
           sx={{ height: 56 }}
           variant="contained"
           size="large"
@@ -61,11 +62,11 @@ export default function ListWithSearch({ path, columns }) {
           novo
         </Button>
       </Grid>
-      <Grid xs={12}>
-        <div style={{ height: 400, width: "100%", marginTop: 20 }}>
+      <Grid xs={12} padding={2}>
+        <div style={{ height: 400, width: "100%" }}>
           <DataGrid columns={column} rows={list} pageSize={5}></DataGrid>
         </div>
       </Grid>
-    </Grid>
+    </>
   );
 }

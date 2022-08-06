@@ -1,4 +1,4 @@
-import { Button, Divider, Grid, Typography } from "@mui/material";
+import { Button, Divider, Grid, Typography, Stack } from "@mui/material";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -11,6 +11,7 @@ export default function FuncionarioDetail() {
   const router = useRouter();
   const { id } = router.query;
   const [servico, setServico] = useState({});
+  const [servicoStatus, setServicoStatus] = useState({});
   const gotoEdit = () => {
     router.push(`${id}/edit`);
   };
@@ -20,11 +21,17 @@ export default function FuncionarioDetail() {
       .get(`servico/${id}`)
       .then((res) => setServico(res.data))
       .catch((e) => toast.error(`não foi possivel`));
-  });
+  }, [id]);
 
+  useEffect(() => {
+    http
+      .get(`relatorio/funcionario/${id}`)
+      .then((res) => setServicoStatus(res.data))
+      .catch((e) => toast.error(`não foi possivel`));
+  }, [id]);
   return (
     <BaseLayout title="Serviço">
-      <Grid xs={8} md={12} padding={2}>
+      <Grid xs={12} padding={2}>
         <ButtonPaper>
           <Button
             onClick={() => {
@@ -36,7 +43,7 @@ export default function FuncionarioDetail() {
           </Button>
         </ButtonPaper>
       </Grid>
-      <Grid xs={8} md={6} padding={2}>
+      <Grid xs={12} md={8} padding={2}>
         <BasePaper>
           <Grid xs={12}>
             <Typography variant="h4">{servico.nome}</Typography>
@@ -57,6 +64,23 @@ export default function FuncionarioDetail() {
               Tempo Estimado: {servico.tempoEstimado} minutos
             </Typography>
           </Grid>
+        </BasePaper>
+      </Grid>
+      <Grid xs={12} md={6} padding={2}>
+        <BasePaper>
+          <Stack spacing={1} justifyContent="center" alignItems="center">
+            <Typography variant="h4">Informações</Typography>
+            <Typography>
+              Efetuados hoje: {servicoStatus.atendimentos}
+            </Typography>
+            <Typography>
+              Ùltimo efetuado: {servicoStatus.ultimoAtendimento}
+            </Typography>
+            <Typography>
+              valor total hoje:{" "}
+              {(servicoStatus.totalServicos || 0) * (servico.valor || 0)}
+            </Typography>
+          </Stack>
         </BasePaper>
       </Grid>
     </BaseLayout>

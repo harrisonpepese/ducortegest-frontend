@@ -40,7 +40,7 @@ export default function AtendimentoDetail() {
   }, [id, update]);
   return (
     <BaseLayout title={"Atendimento"}>
-      <Grid xs={8} md={12} padding={2}>
+      <Grid xs={12} padding={2}>
         <ButtonPaper>
           <Button
             variant="contained"
