@@ -1,4 +1,4 @@
-import { Button, Grid, List, ListItem, Stack, Typography } from "@mui/material";
+import { Button, Grid, Chip, Stack, Typography } from "@mui/material";
 import BaseLayout from "../../../Components/Layout/BaseLayout";
 import { BasePaper } from "../../../Components/Paper/BasePaper";
 import ButtonPaper from "../../../Components/Paper/ButtonPaper";
@@ -13,7 +13,7 @@ export default function AtendimentoDetail() {
   const router = useRouter();
   const [update, setUpdate] = useState(0);
   const { id } = router.query;
-  const [atendimento, setAtendimento] = useState({});
+  const [atendimento, setAtendimento] = useState({ data: {}, loading: true });
   const gotoEdit = () => {
     router.push(`${id}/edit`);
   };
@@ -35,11 +35,11 @@ export default function AtendimentoDetail() {
   useEffect(() => {
     http
       .get(`atendimento/${id}`)
-      .then((res) => setAtendimento(res.data))
+      .then((res) => setAtendimento({ data: res.data, loading: false }))
       .catch((e) => toast.error(`não foi possivel`));
   }, [id, update]);
   return (
-    <BaseLayout title={"Atendimento"}>
+    <BaseLayout title={"Atendimento"} loading={atendimento.loading}>
       <Grid xs={12} padding={2}>
         <ButtonPaper>
           <Button
@@ -60,7 +60,7 @@ export default function AtendimentoDetail() {
           </Button>
           <Button
             variant="contained"
-            disabled={atendimento?.status == 2}
+            disabled={atendimento.data?.status == 2}
             onClick={() => changeStatus(3)}
           >
             Cancelar atendimento
@@ -74,45 +74,92 @@ export default function AtendimentoDetail() {
           </Button>
         </ButtonPaper>
       </Grid>
-      <Grid xs={8} md={6} padding={2}>
+      <Grid xs={12} md={8} padding={2}>
         <BasePaper>
-          <Stack>
-            <Typography>Cliente: {atendimento.clienteName}</Typography>
-            <Typography>Funcionario: {atendimento.funcionarioName}</Typography>
-            <Typography>
-              Status: {atendimentoStatusEnum[atendimento.status]}
-            </Typography>
-            <Typography>Serviços:</Typography>
-            <List>
-              {atendimento.servicos?.map((x, i) => (
-                <ListItem key={i}>{x.nome}</ListItem>
-              ))}
-            </List>
-          </Stack>
-        </BasePaper>
-      </Grid>
-      <Grid xs={8} md={6} padding={2}>
-        <BasePaper>
-          <Stack>
-            <Typography>Valor total</Typography>
-            <Typography>
-              {DataFormater.moneyFormat(
-                atendimento.servicos?.reduce(
-                  (acc, curr) => (acc += curr.valor),
-                  0
-                )
-              )}
-            </Typography>
-            <Typography>Tempo estimado Total</Typography>
-            <Typography>
-              {DataFormater.timeRangeFormat(
-                atendimento.servicos?.reduce(
-                  (acc, curr) => (acc += curr.tempoEstimado),
-                  0
-                )
-              )}
-            </Typography>
-          </Stack>
+          <Grid container padding={2}>
+            <Grid
+              container
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+              margin={2}
+            >
+              <Typography sx={{ fontWeight: "bold" }}>Cliente: </Typography>
+              <Typography>{atendimento.data.clienteName}</Typography>
+            </Grid>
+            <Grid
+              container
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+              margin={2}
+            >
+              <Typography sx={{ fontWeight: "bold" }}>Funcionario: </Typography>
+              <Typography>{atendimento.data.funcionarioName}</Typography>
+            </Grid>
+            <Grid
+              container
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+              margin={2}
+            >
+              <Typography sx={{ fontWeight: "bold" }}>Status: </Typography>
+              <Typography>
+                {atendimentoStatusEnum[atendimento.data.status]}
+              </Typography>
+            </Grid>
+            <Grid
+              container
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+              margin={2}
+            >
+              <Typography sx={{ fontWeight: "bold" }}>Serviços: </Typography>
+              <Stack direction="row" spacing={1}>
+                {atendimento.data.servicos?.map((x, i) => (
+                  <Chip key={i} label={x.nome} />
+                ))}
+              </Stack>
+            </Grid>
+            <Grid
+              container
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+              margin={2}
+            >
+              <Typography sx={{ fontWeight: "bold" }}>Valor total: </Typography>
+              <Typography>
+                {DataFormater.moneyFormat(
+                  atendimento.data.servicos?.reduce(
+                    (acc, curr) => (acc += curr.valor),
+                    0
+                  )
+                )}
+              </Typography>
+            </Grid>
+            <Grid
+              container
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+              margin={2}
+            >
+              <Typography sx={{ fontWeight: "bold" }}>
+                Tempo estimado Total:{" "}
+              </Typography>
+              <Typography>
+                {DataFormater.timeRangeFormat(
+                  atendimento.data.servicos?.reduce(
+                    (acc, curr) => (acc += curr.tempoEstimado),
+                    0
+                  )
+                )}
+              </Typography>
+            </Grid>
+          </Grid>
         </BasePaper>
       </Grid>
     </BaseLayout>

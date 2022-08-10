@@ -1,4 +1,4 @@
-import { Button, Grid, Typography, Stack } from "@mui/material";
+import { Button, Grid, Typography, Stack, Paper } from "@mui/material";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -11,25 +11,31 @@ import http from "../../../axios/axios";
 export default function FuncionarioDetail() {
   const router = useRouter();
   const { id } = router.query;
-  const [funcionario, setFuncionario] = useState({});
-  const [funcionarioStatus, setFuncionarioStatus] = useState({});
+  const [funcionario, setFuncionario] = useState({ data: {}, loading: true });
+  const [funcionarioStatus, setFuncionarioStatus] = useState({
+    data: {},
+    loading: true,
+  });
   const gotoEdit = () => {
     router.push(`${id}/edit`);
   };
   useEffect(() => {
     http
       .get(`funcionario/${id}`)
-      .then((res) => setFuncionario(res.data))
+      .then((res) => setFuncionario({ data: res.data, loading: false }))
       .catch((e) => toast.error(`não foi possivel`));
   }, [id]);
   useEffect(() => {
     http
       .get(`relatorio/funcionario/${id}`)
-      .then((res) => setFuncionarioStatus(res.data))
+      .then((res) => setFuncionarioStatus({ data: res.data, loading: false }))
       .catch((e) => toast.error(`não foi possivel`));
   }, [id]);
   return (
-    <BaseLayout title="Funcionário">
+    <BaseLayout
+      title="Funcionário"
+      loading={funcionario.loading && funcionarioStatus.loading}
+    >
       <Grid xs={12} padding={2}>
         <ButtonPaper>
           <Button
@@ -50,24 +56,54 @@ export default function FuncionarioDetail() {
           </Button>
         </ButtonPaper>
       </Grid>
-      <Grid xs={12} md={6} padding={2}>
-        <ClienteInfoPaper {...funcionario} />
-      </Grid>
-      <Grid xs={12} md={6} padding={2}>
-        <BasePaper>
-          <Stack spacing={1} justifyContent="center" alignItems="center">
-            <Typography variant="h4">Informações hoje</Typography>
-            <Typography>
-              Atendimentos realizados: {funcionarioStatus.atendimentos}
-            </Typography>
-            <Typography>
-              Ùltimo atendimento: {funcionarioStatus.ultimoAtendimento}
-            </Typography>
-            <Typography>
-              Total de serviços: {funcionarioStatus.totalServicos}
-            </Typography>
-          </Stack>
-        </BasePaper>
+      <Grid xs={12} md={8} lg={6} padding={2}>
+        <Paper>
+          <ClienteInfoPaper {...funcionario.data} />
+          <Paper>
+            <Grid container padding={2}>
+              <Grid
+                container
+                direction="row"
+                justifyContent="space-between"
+                alignItems="center"
+                margin={2}
+              >
+                <Typography sx={{ fontWeight: "bold" }}>
+                  Atendimentos Realizados:{" "}
+                </Typography>
+                <Typography>{funcionarioStatus.data.atendimentos}</Typography>
+              </Grid>
+
+              <Grid
+                container
+                direction="row"
+                justifyContent="space-between"
+                alignItems="center"
+                margin={2}
+              >
+                <Typography sx={{ fontWeight: "bold" }}>
+                  Último atendimento:{" "}
+                </Typography>
+                <Typography>
+                  {funcionarioStatus.data.ultimoAtendimento}
+                </Typography>
+              </Grid>
+
+              <Grid
+                container
+                direction="row"
+                justifyContent="space-between"
+                alignItems="center"
+                margin={2}
+              >
+                <Typography sx={{ fontWeight: "bold" }}>
+                  Total de serviços:{" "}
+                </Typography>
+                <Typography>{funcionarioStatus.data.totalServicos}</Typography>
+              </Grid>
+            </Grid>
+          </Paper>
+        </Paper>
       </Grid>
     </BaseLayout>
   );

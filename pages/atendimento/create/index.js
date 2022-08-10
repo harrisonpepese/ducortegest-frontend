@@ -4,10 +4,11 @@ import { useEffect, useState } from "react";
 import BaseLayout from "../../../Components/Layout/BaseLayout";
 import http from "../../../axios/axios";
 import { minLength, required } from "../../../src/rules/InputRules";
+import InputHandler from "../../../src/InputHandler/InputHandler";
 import { toast } from "react-toastify";
 import dayjs from "dayjs";
 
-export default function AgendamentoInput({ data }) {
+export default function AgendamentoInput({ data, loading }) {
   const router = useRouter();
   const { clienteId } = router.query;
   const [input, setInput] = useState({
@@ -15,25 +16,51 @@ export default function AgendamentoInput({ data }) {
       value: null,
       error: false,
       hint: "",
+      rules: [required],
+      minLength: null,
+      required: true,
     },
-    funcionario: { value: null, error: false, hint: "" },
-    data: { value: dayjs().format("YYYY-MM-DD"), error: false, hint: "" },
-    hora: { value: dayjs().format("HH:mm"), error: false, hint: "" },
-    servicos: { value: [], error: false, hint: "" },
+    funcionario: {
+      value: null,
+      error: false,
+      hint: "",
+      rules: [required],
+      minLength: null,
+      required: true,
+    },
+    data: {
+      value: dayjs().format("YYYY-MM-DD"),
+      error: false,
+      hint: "",
+      rules: [required],
+      minLength: null,
+      required: true,
+    },
+    hora: {
+      value: dayjs().format("HH:mm"),
+      error: false,
+      hint: "",
+      rules: [required],
+      minLength: null,
+      required: true,
+    },
+    servicos: {
+      value: [],
+      error: false,
+      hint: "",
+      rules: [required],
+      minLength: null,
+      required: true,
+    },
   });
-  const handler = (field, rules = [], value, length = 3) => {
-    const validates = rules.map((func) => func(value, length));
-    const error = validates.find((x) => x.error == true);
-    let state;
-    if (error) {
-      state = {
-        ...input,
-        [field]: { value, error: true, hint: error.hint },
-      };
-    } else {
-      state = { ...input, [field]: { value, error: false, hint: null } };
-    }
-    setInput(state);
+
+  const handler = (field, value) => {
+    const state = InputHandler(input[field], value);
+    const newInput = {
+      ...input,
+      [field]: state,
+    };
+    setInput(newInput);
   };
 
   const [clientes, setClientes] = useState([]);
@@ -41,7 +68,15 @@ export default function AgendamentoInput({ data }) {
   const [servicos, setServicos] = useState([]);
 
   const validate = () => {
-    const erros = Object.keys(input).map((key) => input[key].error);
+    const keys = Object.keys(input);
+    const erros = keys.map((key) => {
+      if (input[key].error) {
+        return true;
+      } else if (input[key].required) {
+        return input[key].value == "";
+      }
+      return false;
+    });
     const hasError = erros.some((value) => value === true);
     if (hasError) {
       toast.error("Existem campos inválidos");
@@ -49,6 +84,7 @@ export default function AgendamentoInput({ data }) {
     }
     return true;
   };
+
   useEffect(() => {
     const state = {
       cliente: {
@@ -135,11 +171,11 @@ export default function AgendamentoInput({ data }) {
         servicos: input.servicos.value.map((x) => x.id),
       })
       .then(() => {
-        toast.success("Serviço cadastrado com sucesso");
+        toast.success("Atendimento atualizado com sucesso");
         back();
       })
       .catch((e) => {
-        toast.error("Erro ao cadastrar serviço.");
+        toast.error("Erro ao atualizado atendimento.");
       });
   };
   const save = async () => {
@@ -151,18 +187,21 @@ export default function AgendamentoInput({ data }) {
         servicos: input.servicos.value.map((x) => x.id),
       })
       .then(() => {
-        toast.success("Agendamento cadastrado com sucesso");
+        toast.success("Atendimento cadastrado com sucesso");
         back();
       })
       .catch((e) => {
-        toast.error("Erro ao Agendamento funcionario.");
+        toast.error("Erro ao atendimento funcionario.");
       });
   };
   const back = () => {
     router.back();
   };
   return (
-    <BaseLayout title={`${data?._id ? "Editar" : "Criar"} atendimento`}>
+    <BaseLayout
+      title={`${data?.id ? "Editar" : "Criar"} atendimento`}
+      loading={loading}
+    >
       <Grid container xs={9} justifyContent="space-between">
         <Grid xs={12} padding={2}>
           <Autocomplete
@@ -259,6 +298,7 @@ export default function AgendamentoInput({ data }) {
           <Button
             variant="outlined"
             size="large"
+            color="secondary"
             onClick={() => {
               back();
             }}

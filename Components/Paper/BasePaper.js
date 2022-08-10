@@ -8,9 +8,8 @@ export function BasePaper({ children }) {
         height: "100%",
         padding: 1,
         display: "flex",
-        justifyContent: "space-evenly",
+        justifyContent: "center",
       }}
-      elevation={2}
     >
       {children}
     </Paper>

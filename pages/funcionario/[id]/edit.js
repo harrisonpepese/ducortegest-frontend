@@ -5,12 +5,14 @@ import FuncionarioInput from "../create/index";
 
 export default function FuncionarioEdit() {
   const router = useRouter();
-  const [data, setData] = useState({});
+  const [data, setData] = useState({ data: {}, loading: true });
   const { id } = router.query;
   useEffect(() => {
     if (id) {
-      http.get(`funcionario/${id}`).then((res) => setData(res.data));
+      http
+        .get(`funcionario/${id}`)
+        .then((res) => setData({ data: res.data, loading: false }));
     }
   }, [id]);
-  return <FuncionarioInput data={data} />;
+  return <FuncionarioInput data={data.data} loading={loading} />;
 }

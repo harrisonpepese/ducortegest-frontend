@@ -1,14 +1,21 @@
-import { Button, Grid, Stack } from "@mui/material";
+import {
+  Button,
+  CircularProgress,
+  Grid,
+  Stack,
+  TextField,
+} from "@mui/material";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import BaseLayout from "../Components/Layout/BaseLayout";
 import CountPaper from "../Components/Paper/CountPaper";
 import http from "../axios/axios";
 import ButtonPaper from "../Components/Paper/ButtonPaper";
+import Loading from "../Components/Loading";
 
 export default function Home() {
   const router = useRouter();
-  const [data, setData] = useState([]);
+  const [data, setData] = useState({ data: [], loading: true });
   const [refresh, setRefresh] = useState("");
   const gotoCreateUser = (id) => {
     router.push(`cliente/create`);
@@ -21,7 +28,7 @@ export default function Home() {
   };
   useEffect(() => {
     http.get("relatorio/dashboard").then((res) => {
-      setData(res.data);
+      setData({ data: res.data, loading: false });
     });
   }, [refresh]);
   setTimeout(() => {
@@ -58,14 +65,19 @@ export default function Home() {
           </Button>
         </ButtonPaper>
       </Grid>
+      <TextField type="date"></TextField>
       <Grid container>
-        {data.map((x, i) => {
-          return (
-            <Grid item key={i} xs={12} sm={6} md={3} padding={2}>
-              <CountPaper title={x.name} count={x.value}></CountPaper>
-            </Grid>
-          );
-        })}
+        {data.loading ? (
+          <Loading />
+        ) : (
+          data.data.map((x, i) => {
+            return (
+              <Grid item key={i} xs={12} sm={6} md={3} padding={2}>
+                <CountPaper title={x.name} count={x.value}></CountPaper>
+              </Grid>
+            );
+          })
+        )}
       </Grid>
     </BaseLayout>
   );

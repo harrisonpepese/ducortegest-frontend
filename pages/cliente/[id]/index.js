@@ -11,8 +11,11 @@ import ButtonPaper from "../../../Components/Paper/ButtonPaper";
 export default function ClienteDetail() {
   const router = useRouter();
   const { id } = router.query;
-  const [cliente, setCliente] = useState({});
-  const [clienteStatus, setClienteStatus] = useState({});
+  const [cliente, setCliente] = useState({ data: {}, loading: true });
+  const [clienteStatus, setClienteStatus] = useState({
+    data: {},
+    loading: true,
+  });
   const gotoEdit = () => {
     router.push(`${id}/edit`);
   };
@@ -22,18 +25,20 @@ export default function ClienteDetail() {
   useEffect(() => {
     http
       .get(`cliente/${id}`)
-      .then((res) => setCliente(res.data))
+      .then((res) => setCliente({ data: res.data, loading: false }))
       .catch((e) => toast.error(`não foi possivel`));
   }, [id]);
   useEffect(() => {
     http
       .get(`relatorio/cliente/${id}`)
-      .then((res) => setClienteStatus(res.data))
+      .then((res) => setClienteStatus({ data: res.data, loading: false }))
       .catch((e) => toast.error(`não foi possivel`));
   }, [id]);
-  console.log(clienteStatus);
   return (
-    <BaseLayout title="Cliente">
+    <BaseLayout
+      title="Cliente"
+      loading={cliente.loading && clienteStatus.loading}
+    >
       <Grid xs={12} padding={2}>
         <ButtonPaper>
           <Button
@@ -54,24 +59,51 @@ export default function ClienteDetail() {
           </Button>
         </ButtonPaper>
       </Grid>
-      <Grid xs={12} md={6} padding={2}>
-        <ClienteInfoPaper {...cliente} />
-      </Grid>
+      <Grid xs={12} md={8} lg={6} padding={2}>
+        <Paper>
+          <ClienteInfoPaper {...cliente.data} />
+          <Paper>
+            <Grid container padding={2}>
+              <Grid
+                container
+                direction="row"
+                justifyContent="space-between"
+                alignItems="center"
+                margin={2}
+              >
+                <Typography sx={{ fontWeight: "bold" }}>
+                  Atendimentos Realizados:{" "}
+                </Typography>
+                <Typography>{clienteStatus.data.atendimentos}</Typography>
+              </Grid>
 
-      <Grid xs={12} md={6} padding={2}>
-        <Paper sx={{ width: "100%", padding: 1, height: "100%" }} elevation={2}>
-          <Stack spacing={1} justifyContent="center" alignItems="center">
-            <Typography variant="h4">Informações</Typography>
-            <Typography>
-              Atendimentos Realizados: {clienteStatus.atendimentos}
-            </Typography>
-            <Typography>
-              Ùltimo atendimento: {clienteStatus.ultimoAtendimento}
-            </Typography>
-            <Typography>
-              Total de serviços: {clienteStatus.totalServicos}
-            </Typography>
-          </Stack>
+              <Grid
+                container
+                direction="row"
+                justifyContent="space-between"
+                alignItems="center"
+                margin={2}
+              >
+                <Typography sx={{ fontWeight: "bold" }}>
+                  Último atendimento:{" "}
+                </Typography>
+                <Typography>{clienteStatus.data.ultimoAtendimento}</Typography>
+              </Grid>
+
+              <Grid
+                container
+                direction="row"
+                justifyContent="space-between"
+                alignItems="center"
+                margin={2}
+              >
+                <Typography sx={{ fontWeight: "bold" }}>
+                  Total de serviços:{" "}
+                </Typography>
+                <Typography>{clienteStatus.data.totalServicos}</Typography>
+              </Grid>
+            </Grid>
+          </Paper>
         </Paper>
       </Grid>
     </BaseLayout>

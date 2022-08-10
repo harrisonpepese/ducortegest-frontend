@@ -2,21 +2,69 @@ import { Box, Button, Stack, TextField, Typography } from "@mui/material";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import { minLength, required } from "../src/rules/InputRules";
+import InputHandler from "../src/InputHandler/InputHandler";
 import http from "../axios/axios";
 
 export default function Login() {
   const router = useRouter();
-  const [username, setUserName] = useState("");
-  const [password, setPassword] = useState("");
+  const [input, setInput] = useState({
+    username: {
+      value: "",
+      error: false,
+      hint: "",
+      rules: [required, minLength],
+      minLength: 3,
+      required: true,
+    },
+    password: {
+      value: "",
+      error: false,
+      hint: "",
+      rules: [required, minLength],
+      minLength: 3,
+      required: true,
+    },
+  });
+
+  const handler = (field, value) => {
+    const state = InputHandler(input[field], value);
+    const newInput = {
+      ...input,
+      [field]: state,
+    };
+    setInput(newInput);
+  };
+
+  const validate = () => {
+    const keys = Object.keys(input);
+    const erros = keys.map((key) => {
+      if (input[key].error) {
+        return true;
+      } else if (input[key].required) {
+        return input[key].value == "";
+      }
+      return false;
+    });
+    const hasError = erros.some((value) => value === true);
+    if (hasError) {
+      return false;
+    }
+    return true;
+  };
+
   const login = async () => {
+    if (!validate()) {
+      toast.error("Verifique o login e a senha para continuar.");
+      return;
+    }
     let response = await http
       .post("auth/login", {
-        username,
-        password,
+        username: input.username.value,
+        password: input.password.value,
       })
-      .catch((error) => {
+      .catch(() => {
         toast.error("Verifique o login e a senha para continuar.");
-        console.log(error);
       })
       .then((res) => res.data);
     localStorage.setItem("token", response.access_token);
@@ -25,7 +73,6 @@ export default function Login() {
     ] = `Bearer ${response.access_token}`;
     router.push("/");
   };
-  const redefinirSenha = async () => {};
   const cadastrar = async () => {
     router.push("/singin");
   };
@@ -39,14 +86,18 @@ export default function Login() {
       <Stack spacing={2} alignContent="center">
         <Typography variant="h2">Du Corte Gest</Typography>
         <TextField
-          value={username}
-          onChange={(e) => setUserName(e.target.value)}
+          value={input.username.value}
+          error={input.username.error}
+          helperText={input.username.hint}
+          onChange={(e) => handler("username", e.target.value)}
           placeholder="Usuário"
         ></TextField>
         <TextField
           type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          value={input.password.value}
+          error={input.password.error}
+          helperText={input.password.hint}
+          onChange={(e) => handler("password", e.target.value)}
           placeholder="Senha"
         ></TextField>
         <Typography>Esqueceu sua senha?</Typography>

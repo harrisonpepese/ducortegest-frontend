@@ -4,31 +4,76 @@ import { useEffect, useState } from "react";
 import BaseLayout from "../../../Components/Layout/BaseLayout";
 import http from "../../../axios/axios";
 import { cpf, minLength, required } from "../../../src/rules/InputRules";
+import InputHandler from "../../../src/InputHandler/InputHandler";
 import { toast } from "react-toastify";
-export default function FuncionarioInput({ data }) {
+export default function FuncionarioInput({ data, loading }) {
   const router = useRouter();
   const [input, setInput] = useState({
-    nome: { value: data?.nome || "", error: false, hint: "" },
-    sobrenome: { value: data?.sobrenome || "", error: false, hint: "" },
-    sexo: { value: data?.sexo || "", error: false, hint: "" },
-    telefone: { value: data?.telefone || "", error: false, hint: "" },
-    cpf: { value: data?.cpf || "", error: false, hint: "" },
-    cnpj: { value: data?.cnpj || "", error: false, hint: "" },
-    comissao: { value: data?.comissao || "", error: false, hint: "" },
+    nome: {
+      value: data?.nome || "",
+      error: false,
+      hint: "",
+      rules: [required, minLength],
+      minLength: 3,
+      required: true,
+    },
+    sobrenome: {
+      value: data?.sobrenome || "",
+      error: false,
+      hint: "",
+      rules: [required, minLength],
+      minLength: 3,
+      required: true,
+    },
+    sexo: {
+      value: data?.sexo || "",
+      error: false,
+      hint: "",
+      rules: [required],
+      minLength: null,
+      required: true,
+    },
+    telefone: {
+      value: data?.telefone || "",
+      error: false,
+      hint: "",
+      rules: [required, minLength],
+      minLength: 9,
+      required: true,
+    },
+    cpf: {
+      value: data?.cpf || "",
+      error: false,
+      hint: "",
+      rules: [required, cpf, minLength],
+      minLength: 11,
+      required: false,
+    },
+    cnpj: {
+      value: data?.cnpj || "",
+      error: false,
+      hint: "",
+      rules: [required, minLength],
+      minLength: null,
+      required: false,
+    },
+    comissao: {
+      value: data?.comissao || "",
+      error: false,
+      hint: "",
+      rules: [required, minLength],
+      minLength: 2,
+      required: true,
+    },
   });
-  const handler = (field, rules = [], value, length = 3) => {
-    const validates = rules.map((func) => func(value, length));
-    const error = validates.find((x) => x.error == true);
-    let state;
-    if (error) {
-      state = {
-        ...input,
-        [field]: { value, error: true, hint: error.hint },
-      };
-    } else {
-      state = { ...input, [field]: { value, error: false, hint: null } };
-    }
-    setInput(state);
+
+  const handler = (field, value) => {
+    const state = InputHandler(input[field], value);
+    const newInput = {
+      ...input,
+      [field]: state,
+    };
+    setInput(newInput);
   };
 
   useEffect(() => {
@@ -45,7 +90,15 @@ export default function FuncionarioInput({ data }) {
   }, [data]);
 
   const validate = () => {
-    const erros = Object.keys(input).map((key) => input[key].error);
+    const keys = Object.keys(input);
+    const erros = keys.map((key) => {
+      if (input[key].error) {
+        return true;
+      } else if (input[key].required) {
+        return input[key].value == "";
+      }
+      return false;
+    });
     const hasError = erros.some((value) => value === true);
     if (hasError) {
       toast.error("Existem campos inválidos");
@@ -53,9 +106,10 @@ export default function FuncionarioInput({ data }) {
     }
     return true;
   };
+
   const submit = async () => {
     if (validate()) {
-      if (data?._id) {
+      if (data?.id) {
         return await update();
       }
       return await save();
@@ -63,7 +117,7 @@ export default function FuncionarioInput({ data }) {
   };
   const save = async () => {
     await http
-      .post(`funcionario${data?._id ? `/${data._id}` : ""}`, {
+      .post("funcionario", {
         nome: input.nome.value,
         sobrenome: input.sobrenome.value,
         sexo: input.sexo.value,
@@ -82,7 +136,7 @@ export default function FuncionarioInput({ data }) {
   };
   const update = async () => {
     await http
-      .put(`funcionario/${data?._id}`, {
+      .put(`funcionario/${data?.id}`, {
         nome: input.nome.value,
         sobrenome: input.sobrenome.value,
         sexo: input.sexo.value,
@@ -104,7 +158,10 @@ export default function FuncionarioInput({ data }) {
     router.back();
   };
   return (
-    <BaseLayout title={`${data?._id ? "Editar" : "Criar"} funcionario`}>
+    <BaseLayout
+      title={`${data?.id ? "Editar" : "Criar"} funcionario`}
+      loading={loading}
+    >
       <Grid container xs={9} justifyContent="space-between">
         <Grid xs={12} padding={2}>
           <TextField
@@ -115,7 +172,7 @@ export default function FuncionarioInput({ data }) {
             value={input.nome.value}
             fullWidth
             onChange={(e) => {
-              handler("nome", [required, minLength], e.target.value);
+              handler("nome", e.target.value);
             }}
           />
         </Grid>
@@ -128,7 +185,7 @@ export default function FuncionarioInput({ data }) {
             label="Sobrenome"
             value={input.sobrenome.value}
             onChange={(e) => {
-              handler("sobrenome", [required, minLength], e.target.value);
+              handler("sobrenome", e.target.value);
             }}
           />
         </Grid>
@@ -142,7 +199,7 @@ export default function FuncionarioInput({ data }) {
             label="Sexo"
             value={input.sexo.value}
             onChange={(e) => {
-              handler("sexo", [required], e.target.value);
+              handler("sexo", e.target.value);
             }}
           >
             <MenuItem value="">Selecione</MenuItem>
@@ -162,7 +219,7 @@ export default function FuncionarioInput({ data }) {
             value={input.telefone.value}
             inputProps={{ maxLength: 11 }}
             onChange={(e) => {
-              handler("telefone", [required, minLength], e.target.value, 9);
+              handler("telefone", e.target.value);
             }}
           ></TextField>
         </Grid>
@@ -175,7 +232,7 @@ export default function FuncionarioInput({ data }) {
             value={input.cpf.value}
             inputProps={{ maxLength: 11 }}
             onChange={(e) => {
-              handler("cpf", [required, cpf, minLength], e.target.value);
+              handler("cpf", e.target.value);
             }}
           ></TextField>
         </Grid>
@@ -188,7 +245,7 @@ export default function FuncionarioInput({ data }) {
             value={input.cnpj.value}
             inputProps={{ maxLength: 14 }}
             onChange={(e) => {
-              handler("cnpj", [], e.target.value);
+              handler("cnpj", e.target.value);
             }}
           ></TextField>
         </Grid>
@@ -202,7 +259,7 @@ export default function FuncionarioInput({ data }) {
             value={input.comissao.value}
             inputProps={{ maxLength: 2 }}
             onChange={(e) => {
-              handler("comissao", [required, minLength], e.target.value, 2);
+              handler("comissao", e.target.value);
             }}
           ></TextField>
         </Grid>
@@ -210,6 +267,7 @@ export default function FuncionarioInput({ data }) {
           <Button
             variant="outlined"
             size="large"
+            color="secondary"
             onClick={() => {
               back();
             }}

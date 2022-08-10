@@ -1,4 +1,4 @@
-import { Paper, Stack, Avatar, Box, Typography } from "@mui/material";
+import { Stack, Avatar, Box, Typography } from "@mui/material";
 import ContactPhoneIcon from "@mui/icons-material/ContactPhone";
 import MaleIcon from "@mui/icons-material/Male";
 import FemaleIcon from "@mui/icons-material/Female";
@@ -27,11 +27,16 @@ export default function ClienteInfoPaper({ nomeCompleto, sexo, telefone }) {
   };
   return (
     <BasePaper>
-      <Stack spacing={1} justifyContent="center" alignItems="center">
+      <Stack
+        spacing={1}
+        justifyContent="center"
+        alignItems="center"
+        paddingTop={2}
+      >
         <Avatar sx={{ width: 112, height: 112 }}>
           {getIniciais(nomeCompleto)}
         </Avatar>
-        <Box display="flex">
+        <Box display="flex" sx={{ paddingTop: 2 }}>
           <Typography variant="h4">{nomeCompleto}</Typography>
           {renderGenderIcon(sexo)}
         </Box>

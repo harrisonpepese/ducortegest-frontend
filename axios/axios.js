@@ -9,8 +9,11 @@ http.interceptors.response.use(
   },
   (error) => {
     if (error.response.status === 401) {
-      window.location =
-        window.location.protocol + "//" + window.location.host + "/login";
+      debugger;
+      if (window.location.pathname != "/login") {
+        window.location =
+          window.location.protocol + "//" + window.location.host + "/login";
+      }
       localStorage.removeItem("token");
     }
     throw error;

@@ -1,4 +1,4 @@
-import { Button, Divider, Grid, Typography, Stack } from "@mui/material";
+import { Button, Grid, Typography, Paper } from "@mui/material";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -10,8 +10,11 @@ import http from "../../../axios/axios";
 export default function FuncionarioDetail() {
   const router = useRouter();
   const { id } = router.query;
-  const [servico, setServico] = useState({});
-  const [servicoStatus, setServicoStatus] = useState({});
+  const [servico, setServico] = useState({ data: {}, loading: true });
+  const [servicoStatus, setServicoStatus] = useState({
+    data: {},
+    loading: true,
+  });
   const gotoEdit = () => {
     router.push(`${id}/edit`);
   };
@@ -19,18 +22,21 @@ export default function FuncionarioDetail() {
   useEffect(() => {
     http
       .get(`servico/${id}`)
-      .then((res) => setServico(res.data))
+      .then((res) => setServico({ data: res.data, loading: false }))
       .catch((e) => toast.error(`não foi possivel`));
   }, [id]);
 
   useEffect(() => {
     http
       .get(`relatorio/funcionario/${id}`)
-      .then((res) => setServicoStatus(res.data))
+      .then((res) => setServicoStatus({ data: res.data, loading: false }))
       .catch((e) => toast.error(`não foi possivel`));
   }, [id]);
   return (
-    <BaseLayout title="Serviço">
+    <BaseLayout
+      title="Serviço"
+      loading={servico.loading && servicoStatus.loading}
+    >
       <Grid xs={12} padding={2}>
         <ButtonPaper>
           <Button
@@ -43,45 +49,82 @@ export default function FuncionarioDetail() {
           </Button>
         </ButtonPaper>
       </Grid>
-      <Grid xs={12} md={8} padding={2}>
-        <BasePaper>
-          <Grid xs={12}>
-            <Typography variant="h4">{servico.nome}</Typography>
-          </Grid>
-          <Grid xs={12}>
-            <Divider />
-          </Grid>
-          <Grid xs={12}>
-            <Typography>Descrição: {servico.descricao}</Typography>
-          </Grid>
-          <Grid xs={12}>
-            <Typography>
-              valor ($): {Number.parseFloat(servico.valor)}
+      <Grid xs={12} md={8} lg={6} padding={2}>
+        <Paper>
+          <Grid
+            container
+            direction="row"
+            justifyContent="center"
+            alignItems="center"
+            margin={2}
+          >
+            <Typography variant="h4" paddingTop={2}>
+              {servico.data.nome}
             </Typography>
           </Grid>
-          <Grid xs={12}>
-            <Typography>
-              Tempo Estimado: {servico.tempoEstimado} minutos
-            </Typography>
+          <Grid container padding={2}>
+            <Grid
+              container
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+              margin={2}
+            >
+              <Grid>
+                <Typography sx={{ fontWeight: "bold" }}>Descrição: </Typography>
+                <Typography>{servico.data.descricao}</Typography>
+              </Grid>
+            </Grid>
+
+            <Grid
+              container
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+              margin={2}
+            >
+              <Grid container>
+                <Typography sx={{ fontWeight: "bold" }}>
+                  Tempo Estimado:{" "}
+                </Typography>
+                <Typography>&nbsp;{servico.data.tempoEstimado}</Typography>
+              </Grid>
+            </Grid>
+            <Grid
+              container
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+              margin={2}
+              paddingTop={2}
+            >
+              <Grid>
+                <Typography sx={{ fontWeight: "bold" }}>
+                  Efetuados hoje:{" "}
+                </Typography>
+                <Typography>&nbsp;{servicoStatus.data.atendimentos}</Typography>
+              </Grid>
+              <Grid>
+                <Typography sx={{ fontWeight: "bold" }}>
+                  Último efetuado:{" "}
+                </Typography>
+                <Typography>
+                  &nbsp;{servicoStatus.data.ultimoAtendimento}
+                </Typography>
+              </Grid>
+              <Grid>
+                <Typography sx={{ fontWeight: "bold" }}>
+                  Valor total hoje:{" "}
+                </Typography>
+                <Typography>
+                  &nbsp;
+                  {(servicoStatus.data.totalServicos || 0) *
+                    (servico.valor || 0)}
+                </Typography>
+              </Grid>
+            </Grid>
           </Grid>
-        </BasePaper>
-      </Grid>
-      <Grid xs={12} md={6} padding={2}>
-        <BasePaper>
-          <Stack spacing={1} justifyContent="center" alignItems="center">
-            <Typography variant="h4">Informações</Typography>
-            <Typography>
-              Efetuados hoje: {servicoStatus.atendimentos}
-            </Typography>
-            <Typography>
-              Ùltimo efetuado: {servicoStatus.ultimoAtendimento}
-            </Typography>
-            <Typography>
-              valor total hoje:{" "}
-              {(servicoStatus.totalServicos || 0) * (servico.valor || 0)}
-            </Typography>
-          </Stack>
-        </BasePaper>
+        </Paper>
       </Grid>
     </BaseLayout>
   );

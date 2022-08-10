@@ -4,33 +4,64 @@ import { useEffect, useState } from "react";
 import BaseLayout from "../../../Components/Layout/BaseLayout";
 import http from "../../../axios/axios";
 import { cpf, minLength, required } from "../../../src/rules/InputRules";
+import InputHandler from "../../../src/InputHandler/InputHandler";
 import { toast } from "react-toastify";
-export default function ServicoInput({ data }) {
+export default function ServicoInput({ data, loading }) {
   const router = useRouter();
   const [input, setInput] = useState({
-    nome: { value: data?.nome || "", error: false, hint: "" },
-    descricao: { value: data?.descricao || "", error: false, hint: "" },
-    valor: { value: data?.valor || "", error: false, hint: "" },
-    tempoEstimado: { value: data?.tempoEstimado || "", error: false, hint: "" },
+    nome: {
+      value: data?.nome || "",
+      error: false,
+      hint: "",
+      rules: [required, minLength],
+      minLength: 3,
+      required: true,
+    },
+    descricao: {
+      value: data?.descricao || "",
+      error: false,
+      hint: "",
+      rules: [required, minLength],
+      minLength: 3,
+      required: true,
+    },
+    valor: {
+      value: data?.valor || "",
+      error: false,
+      hint: "",
+      rules: [required],
+      minLength: null,
+      required: true,
+    },
+    tempoEstimado: {
+      value: data?.tempoEstimado || "",
+      error: false,
+      hint: "",
+      rules: [required],
+      minLength: null,
+      required: true,
+    },
   });
 
-  const handler = (field, rules = [], value, length = 3) => {
-    const validates = rules.map((func) => func(value, length));
-    const error = validates.find((x) => x.error == true);
-    let state;
-    if (error) {
-      state = {
-        ...input,
-        [field]: { value, error: true, hint: error.hint },
-      };
-    } else {
-      state = { ...input, [field]: { value, error: false, hint: null } };
-    }
-    setInput(state);
+  const handler = (field, value) => {
+    const state = InputHandler(input[field], value);
+    const newInput = {
+      ...input,
+      [field]: state,
+    };
+    setInput(newInput);
   };
 
   const validate = () => {
-    const erros = Object.keys(input).map((key) => input[key].error);
+    const keys = Object.keys(input);
+    const erros = keys.map((key) => {
+      if (input[key].error) {
+        return true;
+      } else if (input[key].required) {
+        return input[key].value == "";
+      }
+      return false;
+    });
     const hasError = erros.some((value) => value === true);
     if (hasError) {
       toast.error("Existem campos inválidos");
@@ -38,6 +69,7 @@ export default function ServicoInput({ data }) {
     }
     return true;
   };
+
   useEffect(() => {
     const state = { ...input };
     Object.keys(data || {}).forEach((key) => {
@@ -95,7 +127,10 @@ export default function ServicoInput({ data }) {
     router.back();
   };
   return (
-    <BaseLayout title={`${data?._id ? "Editar" : "Criar"} serviço`}>
+    <BaseLayout
+      title={`${data?._id ? "Editar" : "Criar"} serviço`}
+      loading={loading}
+    >
       <Grid container xs={9} justifyContent="space-between">
         <Grid xs={12} padding={2}>
           <TextField
@@ -156,6 +191,7 @@ export default function ServicoInput({ data }) {
           <Button
             variant="outlined"
             size="large"
+            color="secondary"
             onClick={() => {
               back();
             }}
