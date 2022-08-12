@@ -6,6 +6,7 @@ import BaseLayout from "../../../Components/Layout/BaseLayout";
 import { BasePaper } from "../../../Components/Paper/BasePaper";
 import ButtonPaper from "../../../Components/Paper/ButtonPaper";
 import http from "../../../axios/axios";
+import DataFormater from "../../../src/helpers/dataFormat";
 
 export default function FuncionarioDetail() {
   const router = useRouter();
@@ -75,6 +76,20 @@ export default function FuncionarioDetail() {
                 <Typography>{servico.data.descricao}</Typography>
               </Grid>
             </Grid>
+            <Grid
+              container
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+              margin={2}
+            >
+              <Grid>
+                <Typography sx={{ fontWeight: "bold" }}>Valor: </Typography>
+                <Typography>
+                  {DataFormater.moneyFormat(servico.data.valor)}
+                </Typography>
+              </Grid>
+            </Grid>
 
             <Grid
               container
@@ -87,7 +102,10 @@ export default function FuncionarioDetail() {
                 <Typography sx={{ fontWeight: "bold" }}>
                   Tempo Estimado:{" "}
                 </Typography>
-                <Typography>&nbsp;{servico.data.tempoEstimado}</Typography>
+                <Typography>
+                  &nbsp;
+                  {DataFormater.timeRangeFormat(servico.data.tempoEstimado)}
+                </Typography>
               </Grid>
             </Grid>
             <Grid

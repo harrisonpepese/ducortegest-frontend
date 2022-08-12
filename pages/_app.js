@@ -130,7 +130,9 @@ export default function MiniDrawer({ Component, pageProps }) {
       router.push("/login");
     }
   }, []);
-  const isLayoutNeeded = ["/login", "/singin"].includes(router.pathname);
+  const isLayoutNeeded = ["/login", "/singin", "/forgotpassword"].includes(
+    router.pathname
+  );
   if (isLayoutNeeded) {
     return (
       <ThemeProvider theme={DefaultTheme}>

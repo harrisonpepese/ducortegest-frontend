@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { minLength, required } from "../src/rules/InputRules";
 import InputHandler from "../src/InputHandler/InputHandler";
 import http from "../axios/axios";
+import Link from "next/link";
 
 export default function Login() {
   const router = useRouter();
@@ -53,25 +54,27 @@ export default function Login() {
     return true;
   };
 
-  const login = async () => {
+  const login = () => {
     if (!validate()) {
       toast.error("Verifique o login e a senha para continuar.");
       return;
     }
-    let response = await http
+    http
       .post("auth/login", {
         username: input.username.value,
         password: input.password.value,
       })
+      .then((res) => {
+        const response = res.data;
+        localStorage.setItem("token", response.access_token);
+        http.defaults.headers.common[
+          "Authorization"
+        ] = `Bearer ${response.access_token}`;
+        router.push("/");
+      })
       .catch(() => {
         toast.error("Verifique o login e a senha para continuar.");
-      })
-      .then((res) => res.data);
-    localStorage.setItem("token", response.access_token);
-    http.defaults.headers.common[
-      "Authorization"
-    ] = `Bearer ${response.access_token}`;
-    router.push("/");
+      });
   };
   const cadastrar = async () => {
     router.push("/singin");
@@ -100,7 +103,9 @@ export default function Login() {
           onChange={(e) => handler("password", e.target.value)}
           placeholder="Senha"
         ></TextField>
-        <Typography>Esqueceu sua senha?</Typography>
+        <Link href="/forgotpassword">
+          <Typography>Esqueceu sua senha?</Typography>
+        </Link>
         <>
           <Button variant="contained" onClick={() => login()}>
             entrar

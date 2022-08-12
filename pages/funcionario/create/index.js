@@ -127,12 +127,14 @@ export default function FuncionarioInput({ data, loading }) {
         comissao: input.comissao.value,
       })
       .then(() => {
-        toast.success("funcionario cadastrado com sucesso");
+        toast.success("funcionário cadastrado com sucesso");
         back();
       })
-      .catch((e) => {
-        toast.error("Erro ao cadastrar funcionario.");
-      });
+      .catch((error) =>
+        toast.error(
+          `Não foi criar o funcionário: ${error.response?.data?.message}`
+        )
+      );
   };
   const update = async () => {
     await http
@@ -146,11 +148,11 @@ export default function FuncionarioInput({ data, loading }) {
         comissao: input.comissao.value,
       })
       .then(() => {
-        toast.success("funcionario atualizado com sucesso");
+        toast.success("funcionário atualizado com sucesso");
         back();
       })
       .catch((e) => {
-        toast.error("Erro ao atualizar funcionario.");
+        toast.error("Erro ao atualizar funcionário.");
       });
   };
 
@@ -159,7 +161,7 @@ export default function FuncionarioInput({ data, loading }) {
   };
   return (
     <BaseLayout
-      title={`${data?.id ? "Editar" : "Criar"} funcionario`}
+      title={`${data?.id ? "Editar" : "Criar"} funcionário`}
       loading={loading}
     >
       <Grid container xs={9} justifyContent="space-between">

@@ -59,20 +59,6 @@ export default function FuncionarioInput({ data, loading }) {
     };
     setInput(newInput);
   };
-
-  useEffect(() => {
-    const state = { ...input };
-    Object.keys(data || {}).forEach((key) => {
-      if (key == "_id" || key == "__v") {
-        return;
-      }
-      if (state[key]) {
-        state[key].value = data[key];
-      }
-    });
-    setInput(state);
-  }, [data]);
-
   const validate = () => {
     const keys = Object.keys(input);
     const erros = keys.map((key) => {
@@ -90,6 +76,20 @@ export default function FuncionarioInput({ data, loading }) {
     }
     return true;
   };
+  useEffect(() => {
+    const state = { ...input };
+    Object.keys(data || {}).forEach((key) => {
+      if (key == "_id" || key == "__v") {
+        return;
+      }
+      if (state[key]) {
+        state[key].value = data[key];
+      }
+    });
+    setInput(state);
+  }, [data]);
+
+  
   const submit = async () => {
     if (validate()) {
       if (data?.id) {
@@ -111,9 +111,9 @@ export default function FuncionarioInput({ data, loading }) {
         toast.success("Cliente cadastrado com sucesso");
         back();
       })
-      .catch((e) => {
-        toast.error("Erro ao cadastrar cliente.");
-      });
+      .catch((error) =>
+        toast.error(`Não foi criar o cliente: ${error.response?.data?.message}`)
+      );
   };
   const update = async () => {
     await http
@@ -128,9 +128,11 @@ export default function FuncionarioInput({ data, loading }) {
         toast.success("Cliente atualizado com sucesso");
         back();
       })
-      .catch((e) => {
-        toast.error("Erro ao atualizar cliente.");
-      });
+      .catch((error) =>
+        toast.error(
+          `Não foi atualizar cliente o cliente: ${error.response?.data?.message}`
+        )
+      );
   };
 
   const back = () => {

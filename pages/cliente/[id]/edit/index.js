@@ -11,6 +11,8 @@ export default function ClienteEdit() {
     http.get(`cliente/${id}`).then((res) => {
       setData({ data: res.data, loading: false });
     });
-  });
-  return <ClienteInput data={data.data} loading={loading} />;
+  }, []);
+  return (
+    <ClienteInput key="cliente input" data={data.data} loading={data.loading} />
+  );
 }

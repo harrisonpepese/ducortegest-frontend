@@ -85,7 +85,7 @@ export default function ServicoInput({ data, loading }) {
 
   const submit = () => {
     if (validate()) {
-      if (data?._id) {
+      if (data?.id) {
         return update();
       }
       return save();
@@ -93,18 +93,18 @@ export default function ServicoInput({ data, loading }) {
   };
   const update = async () => {
     await http
-      .post(`servico/${data?._id}`, {
+      .put(`servico/${data?.id}`, {
         nome: input.nome.value,
         descricao: input.descricao.value,
         valor: input.valor.value,
         tempoEstimado: input.tempoEstimado.value,
       })
       .then(() => {
-        toast.success("Serviço cadastrado com sucesso");
+        toast.success("Serviço atualizar com sucesso");
         back();
       })
       .catch((e) => {
-        toast.error("Erro ao cadastrar serviço.");
+        toast.error("Erro ao atualizar serviço.");
       });
   };
   const save = async () => {
@@ -119,16 +119,18 @@ export default function ServicoInput({ data, loading }) {
         toast.success("Serviço cadastrado com sucesso");
         back();
       })
-      .catch((e) => {
-        toast.error("Erro ao cadastrar serviço.");
-      });
+      .catch((error) =>
+        toast.error(
+          `Não foi criar o serviço: ${error.response?.data?.message}`
+        )
+      );
   };
   const back = () => {
     router.back();
   };
   return (
     <BaseLayout
-      title={`${data?._id ? "Editar" : "Criar"} serviço`}
+      title={`${data?.id ? "Editar" : "Criar"} serviço`}
       loading={loading}
     >
       <Grid container xs={9} justifyContent="space-between">
@@ -141,7 +143,7 @@ export default function ServicoInput({ data, loading }) {
             value={input.nome.value}
             fullWidth
             onChange={(e) => {
-              handler("nome", [required, minLength], e.target.value);
+              handler("nome", e.target.value);
             }}
           />
         </Grid>
@@ -154,7 +156,7 @@ export default function ServicoInput({ data, loading }) {
             label="Descrição"
             value={input.descricao.value}
             onChange={(e) => {
-              handler("descricao", [required, minLength], e.target.value);
+              handler("descricao", e.target.value);
             }}
           />
         </Grid>
@@ -168,7 +170,7 @@ export default function ServicoInput({ data, loading }) {
             label="valor"
             value={input.valor.value}
             onChange={(e) => {
-              handler("valor", [required], e.target.value);
+              handler("valor", e.target.value);
             }}
           ></TextField>
         </Grid>
@@ -182,7 +184,7 @@ export default function ServicoInput({ data, loading }) {
             label="Tempo Estimado (min)"
             value={input.tempoEstimado.value}
             onChange={(e) => {
-              handler("tempoEstimado", [required], e.target.value);
+              handler("tempoEstimado", e.target.value);
             }}
           ></TextField>
         </Grid>

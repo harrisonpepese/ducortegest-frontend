@@ -17,17 +17,21 @@ export default function AtendimentoDetail() {
   const gotoEdit = () => {
     router.push(`${id}/edit`);
   };
-  const disableEdit = atendimento?.status == 3 || atendimento?.status == 2;
-  const disableIniciarAtendimento = !atendimento?.status == 0;
+  console.log(atendimento);
+  const disableEdit =
+    atendimento.data?.status == 3 || atendimento.data?.status == 2;
+  const disableIniciarAtendimento = !atendimento.data?.status == 0;
   const disableFinalizaAtendimento =
-    disableEdit || atendimento?.status == 0 || atendimento?.status == 2;
+    atendimento.data?.status == 0 ||
+    atendimento.data?.status == 2 ||
+    atendimento.data?.status == 3;
   const changeStatus = (status) => {
     const newAtendimento = {
       ...atendimento,
-      status: status,
-      servicos: atendimento.servicos.map((x) => x.id),
     };
-    http.put(`atendimento/${id}`, newAtendimento).then((res) => {
+    newAtendimento.data.status = status;
+    newAtendimento.data.servicos = atendimento.data.servicos.map((x) => x.id);
+    http.put(`atendimento/${id}`, newAtendimento.data).then((res) => {
       toast.success("atualizado com sucesso!");
       setUpdate(update + 1);
     });

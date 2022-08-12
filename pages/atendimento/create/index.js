@@ -55,6 +55,7 @@ export default function AgendamentoInput({ data, loading }) {
   });
 
   const handler = (field, value) => {
+    console.log(input[field]);
     const state = InputHandler(input[field], value);
     const newInput = {
       ...input,
@@ -86,40 +87,21 @@ export default function AgendamentoInput({ data, loading }) {
   };
 
   useEffect(() => {
-    const state = {
-      cliente: {
-        value: data?.clienteId
-          ? { id: data.clienteId, label: data.clienteName }
-          : null,
-        error: false,
-        hint: "",
-      },
-      funcionario: {
-        value: data?.funcionarioId
-          ? { id: data.funcionarioId, label: data.funcionarioName }
-          : null,
-        error: false,
-        hint: "",
-      },
-      data: {
-        value: dayjs(data?.data).format("YYYY-MM-DD"),
-        error: false,
-        hint: "",
-      },
-      hora: {
-        value: dayjs(data?.data).format("HH:mm"),
-        error: false,
-        hint: "",
-      },
-      servicos: {
-        value: data?.servicos
-          ? data?.servicos.map((x) => ({ id: x.id, label: x.nome }))
-          : [],
-        error: false,
-        hint: "",
-      },
-    };
-    setInput(state);
+    if (data) {
+      const state = { ...input };
+      state.cliente.value = data?.clienteId
+        ? { id: data.clienteId, label: data.clienteName }
+        : null;
+      state.funcionario.value = data?.funcionarioId
+        ? { id: data.funcionarioId, label: data.funcionarioName }
+        : null;
+      state.data.value = dayjs(data?.data).format("YYYY-MM-DD");
+      state.hora.value = dayjs(data?.data).format("HH:mm");
+      state.servicos.value = data?.servicos
+        ? data?.servicos.map((x) => ({ id: x.id, label: x.nome }))
+        : [];
+      setInput(state);
+    }
   }, [data]);
 
   useEffect(() => {
@@ -145,7 +127,6 @@ export default function AgendamentoInput({ data, loading }) {
       if (clienteId) {
         handler(
           "cliente",
-          [required],
           data.find((x) => x.id == clienteId)
         );
       }
@@ -165,8 +146,8 @@ export default function AgendamentoInput({ data, loading }) {
     console.log(input.data.value);
     await http
       .put(`atendimento/${data?.id}`, {
-        clienteId: input.cliente.value?.id,
-        funcionarioId: input.funcionario.value?.id,
+        cliente: input.cliente.value?.id,
+        funcionario: input.funcionario.value?.id,
         data: dayjs(input.data.value + "T" + input.hora.value).toISOString(),
         servicos: input.servicos.value.map((x) => x.id),
       })
@@ -211,7 +192,7 @@ export default function AgendamentoInput({ data, loading }) {
             options={clientes}
             value={input.cliente.value}
             onChange={(e, value) => {
-              handler("cliente", [required], value);
+              handler("cliente", value);
             }}
             renderInput={(params) => (
               <TextField
@@ -231,7 +212,7 @@ export default function AgendamentoInput({ data, loading }) {
             options={funcionarios}
             value={input.funcionario.value}
             onChange={(e, value) => {
-              handler("funcionario", [required], value);
+              handler("funcionario", value);
             }}
             renderInput={(params) => (
               <TextField
@@ -254,7 +235,7 @@ export default function AgendamentoInput({ data, loading }) {
             label="Data"
             value={input.data.value}
             onChange={(e) => {
-              handler("data", [required], e.target.value);
+              handler("data", e.target.value);
             }}
           ></TextField>
         </Grid>
@@ -268,7 +249,7 @@ export default function AgendamentoInput({ data, loading }) {
             label="Horário"
             value={input.hora.value}
             onChange={(e) => {
-              handler("hora", [required], e.target.value);
+              handler("hora", e.target.value);
             }}
           ></TextField>
         </Grid>
@@ -280,7 +261,7 @@ export default function AgendamentoInput({ data, loading }) {
             options={servicos}
             value={input.servicos.value}
             onChange={(e, value) => {
-              handler("servicos", [required], value);
+              handler("servicos", value);
             }}
             renderInput={(params) => (
               <TextField

@@ -1,3 +1,5 @@
+import isEmail from "validator/lib/isEmail";
+
 export function required(value) {
   if (!value) {
     return { error: true, hint: "O campo é obrigatório." };
@@ -38,4 +40,10 @@ export function cpf(value) {
   if (resto != parseInt(inputCPF.substring(10, 11)))
     return { error: true, hint: `O campo é inválido.` };
   return { error: false, hint: null };
+}
+export function email(value) {
+  if (isEmail(value)) {
+    return { error: false, hint: null };
+  }
+  return { error: true, hint: "O email é inválido." };
 }

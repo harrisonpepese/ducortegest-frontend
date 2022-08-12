@@ -5,33 +5,10 @@ import { toast } from "react-toastify";
 import { cpf, minLength, required, email } from "../src/rules/InputRules";
 import InputHandler from "../src/InputHandler/InputHandler";
 import http from "../axios/axios";
+import axios from "axios";
 
 export default function Login() {
   const [input, setInput] = useState({
-    username: {
-      value: "",
-      error: false,
-      hint: "",
-      rules: [required, minLength],
-      minLength: 3,
-      required: true,
-    },
-    password: {
-      value: "",
-      error: false,
-      hint: "",
-      rules: [required, minLength],
-      minLength: 6,
-      required: true,
-    },
-    rePassword: {
-      value: "",
-      error: false,
-      hint: "",
-      rules: [required, minLength],
-      minLength: 6,
-      required: true,
-    },
     email: {
       value: "",
       error: false,
@@ -69,28 +46,22 @@ export default function Login() {
   const router = useRouter();
   const singIn = async () => {
     if (!validate()) {
-      toast.error("Existem campos inválidos");
+      toast.error("Preencha todos os campos");
       return;
     }
-    if (input.password.value != input.rePassword.value) {
-      toast.error("As senhas não são correspondentes");
-      return;
-    }
-    await http
-      .post("auth/singUp", {
-        username: input.username.value,
-        password: input.password.value,
-        email: input.email.value,
-      })
+    http
+      .post("auth/forgotPassword", { email: input.email.value })
       .then((res) => {
-        toast.success("Usuário criado com sucesso.");
+        toast.success(
+          "a solicitação foi enviada com sucesso, devido aos custos este mvp não enviara email para confirmação de senha use a senha 123456 para logar no seu usuário"
+        );
         router.push("/login");
       })
-      .catch((error) => {
+      .catch((error) =>
         toast.error(
-          `Não foi possivel criar o usuario: ${error.response?.data?.message}`
-        );
-      });
+          `Não foi possivel recuperar a senha: ${error.response?.data?.message}`
+        )
+      );
   };
 
   return (
@@ -107,31 +78,7 @@ export default function Login() {
         textAlign="center"
         width={400}
       >
-        <Typography variant="h3">Cadastrar</Typography>
-        <TextField
-          value={input.username.value}
-          error={input.username.error}
-          helperText={input.username.hint}
-          onChange={(e) => handler("username", e.target.value)}
-          placeholder="Usuário"
-        ></TextField>
-        <TextField
-          type="password"
-          value={input.password.value}
-          error={input.password.error}
-          helperText={input.password.hint}
-          onChange={(e) => handler("password", e.target.value)}
-          placeholder="Senha"
-        ></TextField>
-        <TextField
-          type="password"
-          value={input.rePassword.value}
-          error={input.rePassword.error}
-          helperText={input.rePassword.hint}
-          onChange={(e) => handler("rePassword", e.target.value)}
-          placeholder="Confirmar senha"
-        ></TextField>
-
+        <Typography variant="h3">Recuperação de senha</Typography>
         <TextField
           type="email"
           value={input.email.value}
@@ -142,7 +89,7 @@ export default function Login() {
         ></TextField>
         <>
           <Button variant="contained" onClick={() => singIn()}>
-            Cadastar
+            Enviar
           </Button>
           <Button
             variant="contained"

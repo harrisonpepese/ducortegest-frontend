@@ -2,6 +2,7 @@ import BaseLayout from "../../Components/Layout/BaseLayout";
 import ListWithSearch from "../../Components/Lists/ListWithSearch";
 import { useRouter } from "next/router";
 import { Button } from "@mui/material";
+import atendimentoStatusEnum from "../../src/enums/atendimentoStatusEnum";
 export default function AgendamentoPage() {
   const router = useRouter();
   const gotoDetail = (id) => {
@@ -10,7 +11,18 @@ export default function AgendamentoPage() {
   const columns = [
     { field: "clienteName", headerName: "Cliente", flex: 1 },
     { field: "funcionarioName", headerName: "Funcionário", flex: 1 },
-    { field: "qtnServicos", headerName: "qtd servicos", flex: 1 },
+    {
+      field: "status",
+      headerName: "Status",
+      flex: 1,
+      renderCell: (params) => atendimentoStatusEnum[params.row.status],
+    },
+    {
+      field: "data",
+      headerName: "Data",
+      flex: 1,
+      renderCell: (params) => params.row.data,
+    },
     {
       field: "editar",
       headerName: "Ações",
@@ -19,9 +31,18 @@ export default function AgendamentoPage() {
       ),
     },
   ];
+  const initialState = {
+    sorting: {
+      sortModel: [{ field: "data", sort: "desc" }],
+    },
+  };
   return (
     <BaseLayout title="Atendimentos">
-      <ListWithSearch path={"atendimento"} columns={columns}></ListWithSearch>
+      <ListWithSearch
+        path={"atendimento"}
+        columns={columns}
+        initialState={initialState}
+      ></ListWithSearch>
     </BaseLayout>
   );
 }

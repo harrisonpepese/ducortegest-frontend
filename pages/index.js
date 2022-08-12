@@ -12,10 +12,14 @@ import CountPaper from "../Components/Paper/CountPaper";
 import http from "../axios/axios";
 import ButtonPaper from "../Components/Paper/ButtonPaper";
 import Loading from "../Components/Loading";
+import dayjs from "dayjs";
 
 export default function Home() {
   const router = useRouter();
   const [data, setData] = useState({ data: [], loading: true });
+  const [dashboardDate, setDashboardDate] = useState(
+    dayjs().format("YYYY-MM-DD")
+  );
   const [refresh, setRefresh] = useState("");
   const gotoCreateUser = (id) => {
     router.push(`cliente/create`);
@@ -26,11 +30,17 @@ export default function Home() {
   const gotoCreateServico = () => {
     router.push(`servico/create`);
   };
+  const handleData = (e) => {
+    setDashboardDate(e.target.value);
+  };
   useEffect(() => {
-    http.get("relatorio/dashboard").then((res) => {
-      setData({ data: res.data, loading: false });
-    });
-  }, [refresh]);
+    setData({ ...data, loading: true });
+    http
+      .get(`relatorio/dashboard?data=${dayjs(dashboardDate).toISOString()}`)
+      .then((res) => {
+        setData({ data: res.data, loading: false });
+      });
+  }, [refresh, dashboardDate]);
   setTimeout(() => {
     setRefresh("");
   }, 10000);
@@ -65,7 +75,11 @@ export default function Home() {
           </Button>
         </ButtonPaper>
       </Grid>
-      <TextField type="date"></TextField>
+      <TextField
+        type="date"
+        value={dashboardDate}
+        onChange={handleData}
+      ></TextField>
       <Grid container>
         {data.loading ? (
           <Loading />

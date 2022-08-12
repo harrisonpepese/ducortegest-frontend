@@ -14,5 +14,5 @@ export default function FuncionarioEdit() {
         .then((res) => setData({ data: res.data, loading: false }));
     }
   }, [id]);
-  return <FuncionarioInput data={data.data} loading={loading} />;
+  return <FuncionarioInput data={data.data} loading={data.loading} />;
 }

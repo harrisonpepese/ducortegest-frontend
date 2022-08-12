@@ -1,14 +1,5 @@
-import {
-  Button,
-  Grid,
-  List,
-  ListItem,
-  ListItemText,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Button } from "@mui/material";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
 import BaseLayout from "../../Components/Layout/BaseLayout";
 import ListWithSearch from "../../Components/Lists/ListWithSearch";
 
@@ -30,7 +21,7 @@ export default function ClientesPage() {
     },
   ];
   return (
-    <BaseLayout title="Clientes">
+    <BaseLayout key="clienteTable" title="Clientes">
       <ListWithSearch path="cliente" columns={columns}></ListWithSearch>
     </BaseLayout>
   );
