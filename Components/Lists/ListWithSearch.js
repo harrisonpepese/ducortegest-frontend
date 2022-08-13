@@ -6,9 +6,11 @@ import { minLength } from "../../src/rules/InputRules";
 import InputHandler from "../../src/InputHandler/InputHandler";
 import http from "../../axios/axios";
 import Loading from "../Loading";
+import dayjs from "dayjs";
 export default function ListWithSearch({ path, columns, initialState }) {
   const router = useRouter();
   const [list, setList] = useState({ data: [], loading: true });
+  console.log(list.data);
   const [column, setColumns] = useState(columns);
   const [input, setInput] = useState({
     search: {
@@ -55,21 +57,23 @@ export default function ListWithSearch({ path, columns, initialState }) {
       .then((res) => {
         console.log(res);
         if (res && Array.isArray(res.data)) {
-          setList({ data: res.data, loading: false });
+          setList({ data: res.data.map((x) => parseData(x)), loading: false });
         }
       })
       .catch((error) => {
         console.log(error);
       });
   };
-
+  const parseData = (entity) => {
+    entity.data = dayjs(entity.data).format("YYYY/MM/DD HH:mm");
+    return entity;
+  };
   const getWithGuery = (filter) => {
     http
       .get(`${path}/query?filter=${filter}`)
       .then((res) => {
-        console.log(res);
         if (res && Array.isArray(res.data)) {
-          setList({ data: res.data, loading: false });
+          setList({ data: res.data.map((x) => parseData(x)), loading: false });
         }
       })
       .catch((error) => {
