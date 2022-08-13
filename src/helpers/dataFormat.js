@@ -8,7 +8,8 @@ export default class DataFormater {
     if (number) {
       if (number > 59) {
         const modulo = number % 60;
-        return `${number / 60 - modulo} horas e ${modulo} minutos`;
+        debugger;
+        return `${Math.floor(number / 60)} horas e ${modulo} minutos`;
       } else {
         return `${number} minutos`;
       }
